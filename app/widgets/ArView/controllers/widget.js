@@ -136,7 +136,6 @@ for (var i = 0; i < numberOfViews; i++) {
 		opacity : 0.7
 	});
 
-	overlay.add(radar);
 */
 var label = $.overlayLabel;
 var radar = $.radarView;

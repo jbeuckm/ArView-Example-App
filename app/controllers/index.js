@@ -1,3 +1,4 @@
+
 try {
 	exports.close = function() {
 		winBase.close();

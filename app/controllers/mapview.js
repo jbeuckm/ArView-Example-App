@@ -11,34 +11,34 @@ var isAndroid = Ti.Platform.osname == 'android';
 
 var win = $.win;
 
-	win.orientationModes = [Ti.UI.PORTRAIT];
+win.orientationModes = [Ti.UI.PORTRAIT];
 
-	if (isAndroid) {
-		var titleBar = Ti.UI.createView({
-			top : 0,
-			height : '44dp',
-			backgroundColor : 'black',
-			width : Ti.UI.FILL
-		});
+if (isAndroid) {
+	var titleBar = Ti.UI.createView({
+		top : 0,
+		height : '44dp',
+		backgroundColor : 'black',
+		width : Ti.UI.FILL
+	});
 
-		var titleText = Ti.UI.createLabel({
-			color : 'white',
-			text : win.title,
-			textAlign : 'center',
-			font : {
-				fontWeight : 'bold',
-				fontSize : '18dp'
-			}
-		});
-		titleBar.add(titleText);
-		win.add(titleBar);
-		win.topStart = titleBar.height;
-	} else {
-		win.topStart = 0;
-	}
+	var titleText = Ti.UI.createLabel({
+		color : 'white',
+		text : win.title,
+		textAlign : 'center',
+		font : {
+			fontWeight : 'bold',
+			fontSize : '18dp'
+		}
+	});
+	titleBar.add(titleText);
+	win.add(titleBar);
+	win.topStart = titleBar.height;
+} else {
+	win.topStart = 0;
+}
 
-	var arWin = null;
-	var arWindowOpen = false;
+var arWin = null;
+var arWindowOpen = false;
 
 
 	

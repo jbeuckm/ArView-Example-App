@@ -239,7 +239,7 @@ function Controller() {
     });
     $.__views.overlay.add($.__views.overlayLabel);
     $.__views.radarView = Ti.UI.createView({
-        backgroundImage: "images/radar.png",
+        backgroundImage: "/images/ArView/radar.png",
         width: "80dp",
         height: "80dp",
         bottom: "10dp",
