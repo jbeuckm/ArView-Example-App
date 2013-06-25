@@ -66,7 +66,6 @@ function Controller() {
             viewChange && (views[0].visible = true);
         }
         headingLabel.text = Math.floor(currBearing) + "°";
-        Ti.API.info(currBearing);
         radar.transform = Ti.UI.create2DMatrix().rotate(-1 * currBearing);
     }
     function poiClick(e) {

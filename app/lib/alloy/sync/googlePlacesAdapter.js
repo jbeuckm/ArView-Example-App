@@ -1,3 +1,6 @@
+
+var Alloy = require('/alloy');
+
 module.exports.sync = function(method, model, options) {
             	
     switch (method) {
