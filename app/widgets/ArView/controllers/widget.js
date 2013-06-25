@@ -122,23 +122,6 @@ if (params.overlay) {
 var FIELD_OF_VIEW = 30;
 
 
-/**
- * Compass has indicated a new heading
- * 
- * @param {Object} e
- */
-function headingCallback(e) {
-
-	deviceBearing = e.heading.trueHeading;
-
-	// REM this if you don't want the user to see their heading
-	headingLabel.text = Math.floor(deviceBearing) + "\xB0";
-
-	// point the radar view
-	radar.transform = Ti.UI.create2DMatrix().rotate(-1 * deviceBearing);
-	
-//	updatePoiViews(win.pois);
-}
 
 
 var win = $.win;
@@ -162,16 +145,15 @@ if (params.initialLocation) {
 	deviceLocation = params.initialLocation;
 }
 
-function assignPOIs(pois) {
+function assignPOIs(_pois) {
 
-	win.pois = pois;
+	pois = _pois;
 
-	createRadarBlips(pois);
+	addViews();
+	createRadarBlips();
 	
-	addViews(pois);
-
 	if (deviceLocation && deviceBearing) {
-		updateRelativePositions(pois);
+		updateRelativePositions();
 	}
 
 }
@@ -206,23 +188,41 @@ function locationCallback(e) {
 	}
 	else {
 
-		updateRelativePositions(win.pois);
+		updateRelativePositions();
 
-		for (i=0, l=win.pois.length; i<l; i++) {
-			var poi = win.pois[i];
+		for (i=0, l=pois.length; i<l; i++) {
+			var poi = pois[i];
 			updateRadarBlipPosition(poi);
 		}
 
-//		updatePoiViews(win.pois);
+		updatePoiViews();
 	}
 };
 
+
+/**
+ * Compass has indicated a new heading
+ * 
+ * @param {Object} e
+ */
+function headingCallback(e) {
+
+	deviceBearing = e.heading.trueHeading;
+
+	// REM this if you don't want the user to see their heading
+	headingLabel.text = Math.floor(deviceBearing) + "\xB0";
+
+	// point the radar view
+	radar.transform = Ti.UI.create2DMatrix().rotate(-1 * deviceBearing);
+	
+	updatePoiViews();
+}
 
 
 /**
  * Calculate heading/distance of each poi from deviceLocation
  */
-function updateRelativePositions(pois) {
+function updateRelativePositions() {
 
 	for (i=0, l=pois.length; i<l; i++) {
 
@@ -236,7 +236,7 @@ Ti.API.info('poi = '+poi.latitude+','+poi.longitude);
 Ti.API.info('deviceLocation = '+deviceLocation.latitude+','+deviceLocation.longitude);
 Ti.API.info('poi.distance = '+poi.distance);
 
-			if (maxRange && poi.distance < maxRange) {
+			if (maxRange && (poi.distance <= maxRange) ) {
 				poi.inRange = true;
 				poi.bearing = calculateBearing(deviceLocation, poi);
 				
@@ -247,7 +247,7 @@ Ti.API.info('poi.bearing = '+poi.bearing);
 			else {
 				// don't show pois that are beyond maxDistance
 				poi.inRange = false;
-				Ti.API.debug(poi.title + " not added, maxRange=" + maxRange);
+//				Ti.API.debug(poi.title + " not added, maxRange=" + maxRange);
 			}
 		}
 		else {
@@ -271,14 +271,16 @@ function updatePoiViews(pois) {
 	for (i=0, l=pois.length; i<l; i++) {
 
 		var poi = pois[i];
-		
+Ti.API.info(poi);
 		if (poi.inRange) {
-			
+Ti.API.info('updating view for '+i+'/'+pois.length);
+/*			
 			poi.blip.visible = true;
-
-			var positionInScene = projectBearingIntoScene(poi.bearing);
+Ti.API.info('will update poi with bearing '+poi.bearing);
+			var horizontalPositionInScene = projectBearingIntoScene(poi.bearing);
+Ti.API.info('horizontalPositionInScene = '+horizontalPositionInScene);
 	
-			if ((positionInScene > limitLeft) && (positionInScene < limitRight)) {
+			if ((horizontalPositionInScene > limitLeft) && (horizontalPositionInScene < limitRight)) {
 				poi.view.visible = true;
 /*	
 				// Calcuate the Scaling (for distance)
@@ -293,33 +295,36 @@ function updatePoiViews(pois) {
 				var transform = Ti.UI.create2DMatrix();
 				transform = transform.scale(zoom);
 				view.transform = transform;
-*/	
-				view.center = {
-					x : positionInScene,
-					y : 200
+*	
+				poi.view.center = {
+					left : horizontalPositionInScene,
+					top : 200
 				};
 			}
 			else {
 				poi.view.visible = false;
 			}
+*/
 		}
 		else {
 			poi.view.visible = false;
-//			poi.blip.visible = false;
+			poi.blip.visible = false;
 		}
 	}
 }
 
 
-function addViews(pois) {
-	
+function addViews() {
 	for (i=0, l=pois.length; i<l; i++) {
 		var poi = pois[i];
-		$.arContainer.add(poi.view);
+		if (poi.view) {
+			$.arContainer.add(poi.view);
+			poi.inRange = true;
+		}
 	}
 }
 
-function createRadarBlips(pois) {
+function createRadarBlips() {
 
 	for (i=0, l=pois.length; i<l; i++) {
 
@@ -345,6 +350,8 @@ function createRadarBlips(pois) {
 
 function positionRadarBlip(poi) {
 
+	if (!poi.bearing) return;
+	
 	var rad = toRad(poi.bearing);
 
 	var relativeDistance = poi.distance / (maxRange * 1.2);
