@@ -1,0 +1,10 @@
+<Alloy>
+	
+	<Window id="win">
+		
+	</Window>
+	
+	<Label id="overlay"/>
+	<Button id="arViewButton" onClick="arViewButtonClick"/>
+	
+</Alloy>

@@ -9,14 +9,8 @@ var loc = {
 
 var isAndroid = Ti.Platform.osname == 'android';
 
-var win;
+var win = $.win;
 
-exports.createHomeWindow = function() {
-
-	win = Ti.UI.createWindow({
-		title : 'parmaVision',
-		fullScreen : false
-	});
 	win.orientationModes = [Ti.UI.PORTRAIT];
 
 	if (isAndroid) {
@@ -46,9 +40,6 @@ exports.createHomeWindow = function() {
 	var arWin = null;
 	var arWindowOpen = false;
 
-	return win;
-
-}
 
 	
 function createMapAnnotationsFromPois(pois) {
@@ -146,38 +137,13 @@ function showMap(annotations) {
 }
 
 
-	var overlay = Ti.UI.createLabel({
-		top : 0,
-		height : '44dp',
-		backgroundColor : 'black',
-		color : 'white',
-		width : Ti.UI.FILL,
-		text : "parmaVision",
-		opacity : 0.3,
-		textAlign : 'center',
-		font : {
-			fontWeight : 'bold',
-			fontSize : '18dp'
-		}
-	});
 
 
-	var button = Ti.UI.createButton({
-		title : 'AR',
-		width : '60dp',
-		height : '40dp',
-		right : '5dp',
-		top : '2dp'
-	});
-
-
-
-button.addEventListener('click', function() {
-
+function arViewButtonClick() {
 
 	arWin = require('/alloy').createWidget('ArView', null, {
 		pois : pois,
-		overlay : overlay,
+		overlay : $.overlay,
 		maxDistance : 10000 //in m
 	}).getView();
 	
@@ -187,7 +153,7 @@ button.addEventListener('click', function() {
 	});
 	arWin.open();
 		
-});
+}
 
 
 
@@ -222,9 +188,9 @@ Alloy.Collections.GooglePlace.on('reset', function(e){
 	showMap(anns);
 
 	if (isAndroid) {
-		titleBar.add(button);
+		titleBar.add($.arViewButton);
 	} else {
-		win.rightNavButton = button;
+		win.rightNavButton = $.arViewButton;
 	}
 
 });

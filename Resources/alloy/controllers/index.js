@@ -21,7 +21,7 @@ function Controller() {
         Ti.API.info("Running stand-alone");
     }
     Ti.UI.setBackgroundColor("#000");
-    var mapWin = require("/ui/home").createHomeWindow();
+    var mapWin = Alloy.createController("mapview").getView();
     var winBase = require("/ui/navWindow").createNavigationWindow(mapWin);
     winBase.open();
     _.extend($, exports);

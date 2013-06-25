@@ -1,3 +1,12 @@
+android/ATTR_MINIFY=true
+android/ATTR_PROJECT_NAME=parmavision
+android/abi=armeabi-v7a
+android/distribute_path=
+android/keystore_alias=
+android/keystore_password=
+android/keystore_path=
+android/recent_output=
+android/sdk_version=Android 4.2.2
 eclipse.preferences.version=1
 iosLaunchConfigurationAttributes/ATTR_MINIFY=true
 iosLaunchConfigurationAttributes/ATTR_PROJECT_NAME=parmavision

@@ -1,7 +1,7 @@
 function WPATH(s) {
     var index = s.lastIndexOf("/");
     var path = -1 === index ? "ArView/" + s : s.substring(0, index) + "/ArView/" + s.substring(index + 1);
-    return true && 0 !== path.indexOf("/") ? "/" + path : path;
+    return path;
 }
 
 function Controller() {
@@ -251,7 +251,7 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     var params = arguments[0] || {};
-    var isAndroid = true;
+    var isAndroid = "android" == Ti.Platform.osname;
     if (isAndroid) {
         var screenWidth = Ti.Platform.displayCaps.platformHeight;
         var screenHeight = Ti.Platform.displayCaps.platformWidth;
