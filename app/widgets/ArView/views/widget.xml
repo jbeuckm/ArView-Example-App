@@ -3,10 +3,10 @@
 		
 		<View id="overlay">
 
-			<Label id="headingLabel"></Label>
-				
 			<View id="radarView"></View>
 			
+			<Label id="headingLabel"></Label>
+				
 		</View>
 
 	</Window>

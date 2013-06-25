@@ -146,58 +146,12 @@ function headingCallback(e) {
 
 	var currBearing = e.heading.trueHeading;
 	var internalBearing = currBearing / (360 / views.length);
-	var activeView = Math.floor(internalBearing);
-	var pixelOffset = screenWidth - (Math.floor((internalBearing % 1) * screenWidth));
-
-	if (activeView != lastActiveView) {
-		viewChange = true;
-		lastActiveView = activeView;
-	} else {
-		viewChange = false;
-	}
-
-	for (var i = 0; i < views.length; i++) {
-		var diff = activeView - i;
-		if (diff >= -1 && diff <= 1) {
-			views[i].center = {
-				y : centerY,
-				x : pixelOffset + (-1 * diff * screenWidth)
-			}
-			if (viewChange) {
-				views[i].visible = true;
-			}
-		} else {
-			if (viewChange) {
-				views[i].visible = false;
-			}
-		}
-	}
-
-	if (activeView == 0) {
-		views[views.length - 1].center = {
-			y : centerY,
-			x : views[0].center.x - screenWidth
-		};
-		if (viewChange) {
-			views[views.length - 1].visible = true;
-		}
-	} 
-	else if (activeView == (views.length - 1 )) {
-		views[0].center = {
-			y : centerY,
-			x : views[views.length - 1].center.x + screenWidth
-		};
-		if (viewChange) {
-			views[0].visible = true;
-		}
-	}
 
 	// REM this if you don't want the user to see their heading
 	headingLabel.text = Math.floor(currBearing) + "\xB0";
 
-	// Rotate the radar
+	// point the radar view
 	radar.transform = Ti.UI.create2DMatrix().rotate(-1 * currBearing);
-
 }
 
 
@@ -236,6 +190,11 @@ function locationCallback(e) {
 	myLocation = e.coords;
 	redrawPois();
 };
+
+
+
+
+
 
 function redrawPois() {
 
@@ -314,12 +273,16 @@ function redrawPois() {
 
 	// Add the view
 	for (var i = 0; i < activePois.length; i++) {
+
 		var poi = activePois[i];
-		Ti.API.debug(poi.title);
+
+		Ti.API.debug('poi = '+poi.title);
+		Ti.API.debug('bearing=' + poi.bearing);
+
 		if (showColors) {
 			Ti.API.debug('viewColor=' + views[poi.activeView].backgroundColor);
 		}
-		Ti.API.debug('bearing=' + poi.bearing);
+
 		// Calcuate the Scaling (for distance)
 		var distanceFromSmallest = poi.distance - minDistance;
 		var percentFromSmallest = 1 - (distanceFromSmallest / distanceDelta);

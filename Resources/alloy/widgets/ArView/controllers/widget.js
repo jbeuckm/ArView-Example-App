@@ -224,6 +224,16 @@ function Controller() {
         id: "overlay"
     });
     $.__views.win.add($.__views.overlay);
+    $.__views.radarView = Ti.UI.createView({
+        backgroundImage: "/images/ArView/radar.png",
+        width: "80dp",
+        height: "80dp",
+        bottom: "10dp",
+        left: "10dp",
+        opacity: .7,
+        id: "radarView"
+    });
+    $.__views.overlay.add($.__views.radarView);
     $.__views.headingLabel = Ti.UI.createLabel({
         bottom: "20dp",
         height: "20dp",
@@ -238,16 +248,6 @@ function Controller() {
         id: "headingLabel"
     });
     $.__views.overlay.add($.__views.headingLabel);
-    $.__views.radarView = Ti.UI.createView({
-        backgroundImage: "/images/ArView/radar.png",
-        width: "80dp",
-        height: "80dp",
-        bottom: "10dp",
-        left: "10dp",
-        opacity: .7,
-        id: "radarView"
-    });
-    $.__views.overlay.add($.__views.radarView);
     exports.destroy = function() {};
     _.extend($, $.__views);
     var params = arguments[0] || {};
