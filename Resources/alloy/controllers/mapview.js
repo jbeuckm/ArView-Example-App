@@ -80,7 +80,8 @@ function Controller() {
         arWin = require("/alloy").createWidget("ArView", null, {
             pois: pois,
             overlay: $.overlay,
-            maxDistance: 1e3
+            maxDistance: 1e4,
+            initialLocation: loc
         }).getView();
         arWin.addEventListener("close", function() {
             arWindowOpen = false;
@@ -140,7 +141,12 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     var Alloy = require("/alloy");
-    var loc = {
+    Ti.API.info(Ti.Platform.model);
+    var loc;
+    loc = "google_sdk" == Titanium.Platform.model || "Simulator" == Titanium.Platform.model ? {
+        latitude: 37.78583526611328,
+        longitude: -122.40641784667969
+    } : {
         latitude: 44.977329,
         longitude: -93.267714
     };

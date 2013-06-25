@@ -137,7 +137,7 @@ function headingCallback(e) {
 	// point the radar view
 	radar.transform = Ti.UI.create2DMatrix().rotate(-1 * deviceBearing);
 	
-	updatePoiViews(win.pois);
+//	updatePoiViews(win.pois);
 }
 
 
@@ -162,6 +162,7 @@ $.closeButton.addEventListener('click', closeAR);
 function assignPOIs(pois) {
 
 	createRadarBlips(pois);
+	
 	addViews(pois);
 
 	if (deviceLocation && deviceBearing) {
@@ -173,6 +174,9 @@ function assignPOIs(pois) {
 
 if (params.pois) {
 	assignPOIs(params.pois);
+}
+if (params.initialLocation) {
+	deviceLocation = params.initialLocation;
 }
 
 function poiClick(e) {
@@ -201,7 +205,7 @@ function locationCallback(e) {
 	}
 	else {
 		updatePhysicalPoiPositions(win.pois);
-		updatePoiViews(win.pois);
+//		updatePoiViews(win.pois);
 	}
 };
 
@@ -220,11 +224,16 @@ Ti.API.info('poi '+i);
 		if (poi.view) {
 
 			poi.distance = calculateDistance(deviceLocation, poi);
+Ti.API.info('poi = '+poi.latitude+','+poi.longitude);
+Ti.API.info('deviceLocation = '+deviceLocation.latitude+','+deviceLocation.longitude);
 Ti.API.info('poi.distance = '+poi.distance);
+
 			if (maxRange && poi.distance < maxRange) {
 				poi.inRange = true;
 				positionRadarBlip(poi);
 				poi.bearing = calculateBearing(deviceLocation, poi);
+
+Ti.API.info('poi.bearing = '+poi.bearing);
 			} 
 			else {
 				// don't show pois that are beyond maxDistance
@@ -315,9 +324,12 @@ function createRadarBlips(pois) {
 			backgroundColor : 'white',
 			borderRadius : 2,
 		});
-		radar.add(displayBlip);
 		
 		poi.blip = displayBlip;
+
+		positionRadarBlip(poi);		
+		
+		radar.add(displayBlip);
 	}
 }
 

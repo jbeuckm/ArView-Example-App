@@ -1,10 +1,21 @@
 var Alloy = require('/alloy');
 
-// the location of the phone
-var loc = {
-	latitude : 44.977329,
-	longitude : -93.267714
-};
+Ti.API.info(Ti.Platform.model);
+
+var loc;
+if (Titanium.Platform.model == 'google_sdk' || Titanium.Platform.model == 'Simulator') { 
+	loc = {
+		latitude : 37.78583526611328,
+		longitude : -122.40641784667969
+	};
+}
+else {
+	loc = {
+		latitude : 44.977329,
+		longitude : -93.267714
+	}
+}
+
 
 
 var isAndroid = Ti.Platform.osname == 'android';
@@ -144,7 +155,8 @@ function arViewButtonClick() {
 	arWin = require('/alloy').createWidget('ArView', null, {
 		pois : pois,
 		overlay : $.overlay,
-		maxDistance : 1000 //in m
+		maxDistance : 10000, //in m
+		initialLocation: loc
 	}).getView();
 	
 	arWin.addEventListener('close', function() {
