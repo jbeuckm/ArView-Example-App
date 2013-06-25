@@ -1,8 +1,19 @@
+var Alloy = require('/alloy');
+
+// the location of the phone
+var loc = {
+	latitude : 44.977329,
+	longitude : -93.267714
+};
+
+
 var isAndroid = Ti.Platform.osname == 'android';
+
+var win;
 
 exports.createHomeWindow = function() {
 
-	var win = Ti.UI.createWindow({
+	win = Ti.UI.createWindow({
 		title : 'parmaVision',
 		fullScreen : false
 	});
@@ -35,16 +46,25 @@ exports.createHomeWindow = function() {
 	var arWin = null;
 	var arWindowOpen = false;
 
-	var parmas = require('/data/pois').parmas;
+	return win;
+
+}
+
+	
+function createMapAnnotationsFromPois(pois) {
+	
 	var annotations = [];
 
-	for (var i = 0; i < parmas.length; i++) {
+	for (var i = 0; i < pois.length; i++) {
+		
+		var poi = pois[i];
+		
 		var annotation = Ti.Map.createAnnotation({
-			latitude : parmas[i].latitude,
-			longitude : parmas[i].longitude,
+			latitude : poi.latitude,
+			longitude : poi.longitude,
 			pincolor : Ti.Map.ANNOTATION_RED,
-			title : parmas[i].title,
-			subtitle : parmas[i].address
+			title : poi.title,
+			subtitle : poi.address
 		});
 		annotations.push(annotation);
 		// add the view to the parma
@@ -57,7 +77,7 @@ exports.createHomeWindow = function() {
 		});
 		var label = Ti.UI.createLabel({
 			textAlign : 'center',
-			text : parmas[i].title,
+			text : poi.title,
 			color : 'white',
 			font : {
 				fontSize : '18dp',
@@ -67,18 +87,18 @@ exports.createHomeWindow = function() {
 			top : '5dp'
 		});
 		view.add(label);
-		if (parmas[i].image) {
+		if (poi.image) {
 			var image = Ti.UI.createImageView({
 				width : '130dp',
 				height : '65dp',
 				top : '57dp',
-				image : parmas[i].image
+				image : poi.image
 			});
 			view.add(image);
 		}
 		var rating = Ti.UI.createLabel({
 			textAlign : 'center',
-			text : "rating: " + parmas[i].rating,
+			text : "rating: " + poi.rating,
 			color : 'white',
 			font : {
 				fontSize : '14dp',
@@ -96,16 +116,22 @@ exports.createHomeWindow = function() {
 			}
 			alert(e.poi.title + ' got a click!');
 		});
-		parmas[i].view = view;
+		poi.view = view;
 
 	}
+	
+	return annotations;
+}
 
+
+function showMap(annotations) {
+	
 	var map = Ti.Map.createView({
 		top : win.topStart,
 		mapType : Titanium.Map.STANDARD_TYPE,
 		region : {
-			latitude : -37.814056,
-			longitude : 144.963441,
+			latitude : loc.latitude,
+			longitude : loc.longitude,
 			latitudeDelta : 0.05,
 			longitudeDelta : 0.05
 		},
@@ -116,6 +142,9 @@ exports.createHomeWindow = function() {
 	});
 
 	win.add(map);
+
+}
+
 
 	var overlay = Ti.UI.createLabel({
 		top : 0,
@@ -132,6 +161,7 @@ exports.createHomeWindow = function() {
 		}
 	});
 
+
 	var button = Ti.UI.createButton({
 		title : 'AR',
 		width : '60dp',
@@ -140,22 +170,56 @@ exports.createHomeWindow = function() {
 		top : '2dp'
 	});
 
-	button.addEventListener('click', function() {
 
-//		arWin = require('/ui/ar').createARWindow({
-		
-		arWin = require('/alloy').createWidget('ArView', null, {
-			pois : parmas,
-			overlay : overlay,
-			maxDistance : 10000 //in m
-		}).getView();
-		
-		arWin.addEventListener('close', function() {
-			arWindowOpen = false;
-			arWin = null;
-		});
-		arWin.open();
+
+button.addEventListener('click', function() {
+
+
+	arWin = require('/alloy').createWidget('ArView', null, {
+		pois : pois,
+		overlay : overlay,
+		maxDistance : 10000 //in m
+	}).getView();
+	
+	arWin.addEventListener('close', function() {
+		arWindowOpen = false;
+		arWin = null;
 	});
+	arWin.open();
+		
+});
+
+
+
+function convertGooglePlaceToPoi(place) {
+	return {
+		address: place.vicinity,
+		image: place.icon,
+		latitude: place.geometry.location.lat,
+		longitude: place.geometry.location.lng,
+		link: place.icon,
+		rating: 5.0, 
+		title: place.name
+	};
+}
+
+
+
+var pois = [];
+
+Alloy.Collections.GooglePlace = Alloy.createCollection('GooglePlace');
+
+Alloy.Collections.GooglePlace.on('reset', function(e){ 
+	var places = Alloy.Collections.GooglePlace.toJSON();
+	
+	
+	for (i=0, l=places.length; i<l; i++) {
+		pois.push(convertGooglePlaceToPoi(places[i]));
+	}
+	
+	var anns = createMapAnnotationsFromPois(pois);
+
+	showMap(anns);
 
 	if (isAndroid) {
 		titleBar.add(button);
@@ -163,6 +227,12 @@ exports.createHomeWindow = function() {
 		win.rightNavButton = button;
 	}
 
-	return win;
+});
 
-}
+
+
+
+Alloy.Collections.GooglePlace.fetch({
+	loc: loc
+});
+	

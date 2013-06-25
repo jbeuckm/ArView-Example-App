@@ -12,6 +12,11 @@ if (isAndroid) {
 	var screenHeight = Ti.Platform.displayCaps.platformHeight;
 }
 
+var overlay = $.overlay;
+overlay.height = screenHeight;
+overlay.width = screenWidth;
+
+
 var MAX_ZOOM = 1.0;
 var MIN_ZOOM = 0.35;
 var DELTA_ZOOM = MAX_ZOOM - MIN_ZOOM;
@@ -83,10 +88,6 @@ var colors = ['red', 'yellow', 'pink', 'green', 'purple', 'orange', 'blue', 'aqu
 var numberOfViews = 9;
 var myLocation = null;
 
-
-var overlay = $.overlay;
-overlay.height = screenHeight;
-overlay.width = screenWidth;
 
 
 // Create all the view that will contain the points of interest

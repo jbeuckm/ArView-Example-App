@@ -259,6 +259,9 @@ function Controller() {
         var screenWidth = Ti.Platform.displayCaps.platformWidth;
         var screenHeight = Ti.Platform.displayCaps.platformHeight;
     }
+    var overlay = $.overlay;
+    overlay.height = screenHeight;
+    overlay.width = screenWidth;
     var MAX_ZOOM = 1;
     var MIN_ZOOM = .35;
     var DELTA_ZOOM = MAX_ZOOM - MIN_ZOOM;
@@ -276,16 +279,13 @@ function Controller() {
         Ti.Geolocation.accuracy = Ti.Geolocation.ACCURACY_NEAREST_TEN_METERS;
         Ti.Geolocation.purpose = "Augmented Reality";
     }
-    Ti.API.info("createARWindow() got params:");
+    Ti.API.info("ArView() got params:");
     Ti.API.info(params);
     var views = [];
     var showColors = false;
     var colors = [ "red", "yellow", "pink", "green", "purple", "orange", "blue", "aqua", "white", "silver" ];
     var numberOfViews = 9;
     var myLocation = null;
-    var overlay = $.overlay;
-    overlay.height = screenHeight;
-    overlay.width = screenWidth;
     for (var i = 0; numberOfViews > i; i++) {
         views[i] = Ti.UI.createView({
             top: 0,
