@@ -12,7 +12,7 @@ Window: {
 	backgroundColor : 'transparent'
 }
 
-'#overlayLabel': {
+'#headingLabel': {
 	bottom : '20dp',
 	height : '20dp',
 	text : "",

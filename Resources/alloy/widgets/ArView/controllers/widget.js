@@ -65,7 +65,8 @@ function Controller() {
             };
             viewChange && (views[0].visible = true);
         }
-        label.text = Math.floor(currBearing) + "°";
+        headingLabel.text = Math.floor(currBearing) + "°";
+        Ti.API.info(currBearing);
         radar.transform = Ti.UI.create2DMatrix().rotate(-1 * currBearing);
     }
     function poiClick(e) {
@@ -224,7 +225,7 @@ function Controller() {
         id: "overlay"
     });
     $.__views.win.add($.__views.overlay);
-    $.__views.overlayLabel = Ti.UI.createLabel({
+    $.__views.headingLabel = Ti.UI.createLabel({
         bottom: "20dp",
         height: "20dp",
         text: "",
@@ -235,9 +236,9 @@ function Controller() {
         font: {
             fontSize: "12dp"
         },
-        id: "overlayLabel"
+        id: "headingLabel"
     });
-    $.__views.overlay.add($.__views.overlayLabel);
+    $.__views.overlay.add($.__views.headingLabel);
     $.__views.radarView = Ti.UI.createView({
         backgroundImage: "/images/ArView/radar.png",
         width: "80dp",
@@ -300,7 +301,7 @@ function Controller() {
         }
         overlay.add(views[i]);
     }
-    var label = $.overlayLabel;
+    var headingLabel = $.headingLabel;
     var radar = $.radarView;
     params.overlay && overlay.add(params.overlay);
     if (!isAndroid) {
@@ -309,7 +310,7 @@ function Controller() {
             right: "5dp",
             height: "45dp",
             width: "45dp",
-            backgroundImage: WPATH("images/close.png")
+            backgroundImage: WPATH("/images/ArView/close.png")
         });
         button.addEventListener("click", closeAR);
         overlay.add(button);

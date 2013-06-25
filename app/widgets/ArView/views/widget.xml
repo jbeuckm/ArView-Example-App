@@ -3,7 +3,7 @@
 		
 		<View id="overlay">
 
-			<Label id="overlayLabel"></Label>
+			<Label id="headingLabel"></Label>
 				
 			<View id="radarView"></View>
 			

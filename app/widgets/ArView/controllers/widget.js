@@ -111,33 +111,10 @@ for (var i = 0; i < numberOfViews; i++) {
 
 	overlay.add(views[i]);
 };
-/*
-	var label = Ti.UI.createLabel({
-		bottom : '20dp',
-		height : '20dp',
-		text : "",
-		textAlign : 'center',
-		color : 'white',
-		backgroundColor : 'black',
-		opacity : 0.5,
-		font : {
-			fontSize : '12dp'
-		}
-	});
 
-	overlay.add(label);
 
-	var radar = Ti.UI.createView({
-		backgroundImage : '/images/radar.png',
-		width : '80dp',
-		height : '80dp',
-		bottom : '10dp',
-		left : '10dp',
-		opacity : 0.7
-	});
 
-*/
-var label = $.overlayLabel;
+var headingLabel = $.headingLabel;
 var radar = $.radarView;
 
 if (params.overlay) {
@@ -151,7 +128,7 @@ if (!isAndroid) {
 		right : '5dp',
 		height : '45dp',
 		width : '45dp',
-		backgroundImage : WPATH('images/close.png')
+		backgroundImage : WPATH('/images/ArView/close.png')
 	});
 
 	button.addEventListener('click', closeAR);
@@ -166,6 +143,7 @@ var centerY = screenHeight / 2;
 var activePois;
 
 function headingCallback(e) {
+
 	var currBearing = e.heading.trueHeading;
 	var internalBearing = currBearing / (360 / views.length);
 	var activeView = Math.floor(internalBearing);
@@ -203,7 +181,8 @@ function headingCallback(e) {
 		if (viewChange) {
 			views[views.length - 1].visible = true;
 		}
-	} else if (activeView == (views.length - 1 )) {
+	} 
+	else if (activeView == (views.length - 1 )) {
 		views[0].center = {
 			y : centerY,
 			x : views[views.length - 1].center.x + screenWidth
@@ -214,23 +193,14 @@ function headingCallback(e) {
 	}
 
 	// REM this if you don't want the user to see their heading
-	label.text = Math.floor(currBearing) + "\xB0";
+	headingLabel.text = Math.floor(currBearing) + "\xB0";
 
 	// Rotate the radar
 	radar.transform = Ti.UI.create2DMatrix().rotate(-1 * currBearing);
 
 }
 
-// Just a container window to hold all these objects
-// user will never know
-/*
-var win = Ti.UI.createWindow({
-	modal : true,
-	navBarHidden : true,
-	fullscreen : true,
-	orientationModes : [Ti.UI.PORTRAIT]
-});
-*/
+
 var win = $.win;
 
 if (params.maxDistance) {
@@ -290,11 +260,13 @@ function redrawPois() {
 		}
 	}
 
+	// remove all children from radar
 	if (radar.children.length > 0) {
 		for (var j = radar.children.length; j > 0; j--) {
 			try {
 				radar.remove(view.children[j - 1]);
-			} catch (e) {
+			} 
+			catch (e) {
 				Ti.API.error('error removing child ' + j + ' from radar');
 			}
 		}
@@ -448,7 +420,6 @@ function redrawPois() {
 if (params.pois) {
 	win.assignPOIs(params.pois);
 }
-
 
 
 function toRad(val) {
