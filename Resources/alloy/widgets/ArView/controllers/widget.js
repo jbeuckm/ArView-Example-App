@@ -62,18 +62,13 @@ function Controller() {
     }
     function updateRelativePositions() {
         for (i = 0, l = pois.length; l > i; i++) {
-            Ti.API.info("poi " + i);
             var poi = pois[i];
             if (poi.view) {
                 poi.distance = calculateDistance(deviceLocation, poi);
-                Ti.API.info("poi = " + poi.latitude + "," + poi.longitude);
-                Ti.API.info("deviceLocation = " + deviceLocation.latitude + "," + deviceLocation.longitude);
-                Ti.API.info("poi.distance = " + poi.distance);
                 if (maxRange && maxRange >= poi.distance) {
                     poi.inRange = true;
                     poi.bearing = calculateBearing(deviceLocation, poi);
                     positionRadarBlip(poi);
-                    Ti.API.info("poi.bearing = " + poi.bearing);
                 } else poi.inRange = false;
             } else poi.inRange = false;
         }
@@ -81,11 +76,21 @@ function Controller() {
             return b.distance - a.distance;
         });
     }
-    function updatePoiViews(pois) {
+    function updatePoiViews() {
         for (i = 0, l = pois.length; l > i; i++) {
             var poi = pois[i];
-            Ti.API.info(poi);
-            if (poi.inRange) Ti.API.info("updating view for " + i + "/" + pois.length); else {
+            if (poi.inRange) {
+                poi.blip.visible = true;
+                var horizontalPositionInScene = projectBearingIntoScene(poi.bearing);
+                Ti.API.info("horizontalPositionInScene = " + horizontalPositionInScene);
+                if (horizontalPositionInScene > limitLeft && limitRight > horizontalPositionInScene) {
+                    poi.view.visible = true;
+                    poi.view.center = {
+                        x: horizontalPositionInScene,
+                        y: 200
+                    };
+                } else poi.view.visible = false;
+            } else {
                 poi.view.visible = false;
                 poi.blip.visible = false;
             }
@@ -124,10 +129,16 @@ function Controller() {
         poi.blip.top = y - 1 + "dp";
         Ti.API.info("blip position: " + poi.blip.top + ", " + poi.blip.left);
     }
+    function projectBearingIntoScene(poiBearing) {
+        var delta = findAngularDistance(poiBearing, deviceBearing);
+        Ti.API.info("delta = " + delta);
+        return screenWidth / 2 + delta * screenWidth / FIELD_OF_VIEW;
+    }
     function findAngularDistance(theta1, theta2) {
-        a = theta1 - theta2;
+        var a = theta1 - theta2;
         a > 180 && (a -= 360);
         -180 > a && (a += 360);
+        return a;
     }
     function toRad(val) {
         return val * Math.PI / 180;
@@ -245,6 +256,7 @@ function Controller() {
     var headingLabel = $.headingLabel;
     var radar = $.radarView;
     params.overlay && overlay.add(params.overlay);
+    var FIELD_OF_VIEW = 30;
     var win = $.win;
     var maxRange = 1e3;
     params.maxDistance && (maxRange = params.maxDistance);
@@ -255,6 +267,8 @@ function Controller() {
     $.closeButton.addEventListener("click", closeAR);
     params.initialLocation && (deviceLocation = params.initialLocation);
     params.pois && assignPOIs(params.pois);
+    var limitLeft = -50;
+    var limitRight = screenWidth + 50;
     exports = {
         findAngularDistance: findAngularDistance,
         calculateDistance: calculateDistance,

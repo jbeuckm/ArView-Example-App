@@ -266,20 +266,19 @@ function updateRelativePositions() {
 var limitLeft = -50;
 var limitRight = screenWidth + 50;
 
-function updatePoiViews(pois) {
+function updatePoiViews() {
 
 	for (i=0, l=pois.length; i<l; i++) {
 
 		var poi = pois[i];
-Ti.API.info(poi);
+
 		if (poi.inRange) {
-Ti.API.info('updating view for '+i+'/'+pois.length);
-/*			
+
 			poi.blip.visible = true;
-Ti.API.info('will update poi with bearing '+poi.bearing);
+
 			var horizontalPositionInScene = projectBearingIntoScene(poi.bearing);
 Ti.API.info('horizontalPositionInScene = '+horizontalPositionInScene);
-	
+
 			if ((horizontalPositionInScene > limitLeft) && (horizontalPositionInScene < limitRight)) {
 				poi.view.visible = true;
 /*	
@@ -295,16 +294,16 @@ Ti.API.info('horizontalPositionInScene = '+horizontalPositionInScene);
 				var transform = Ti.UI.create2DMatrix();
 				transform = transform.scale(zoom);
 				view.transform = transform;
-*	
+*/	
 				poi.view.center = {
-					left : horizontalPositionInScene,
-					top : 200
+					x : horizontalPositionInScene,
+					y : 200
 				};
 			}
 			else {
 				poi.view.visible = false;
 			}
-*/
+
 		}
 		else {
 			poi.view.visible = false;
@@ -372,16 +371,19 @@ Ti.API.info('blip position: '+poi.blip.top+', '+poi.blip.left);
  * @param {Object} poiBearing
  */
 function projectBearingIntoScene(poiBearing) {
-	
-	return screenWidth/2 + exports.findAngularDistance(poiBearing - deviceBearing) * screenWidth / FIELD_OF_VIEW;
+
+	var delta = findAngularDistance(poiBearing, deviceBearing);
+Ti.API.info('delta = '+delta);	
+	return screenWidth/2 + delta * screenWidth / FIELD_OF_VIEW;
 
 }
 
 
 function findAngularDistance(theta1, theta2) {
-	a = theta1 - theta2;
+	var a = theta1 - theta2;
 	if (a > 180) a -= 360;
 	if (a < -180) a += 360;
+	return a;
 }
 
 function toRad(val) {
