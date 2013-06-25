@@ -226,15 +226,15 @@ function updateRelativePositions() {
 
 	for (i=0, l=pois.length; i<l; i++) {
 
-Ti.API.info('poi '+i);
+//Ti.API.info('poi '+i);
 		var poi = pois[i];
 		
 		if (poi.view) {
 
 			poi.distance = calculateDistance(deviceLocation, poi);
-Ti.API.info('poi = '+poi.latitude+','+poi.longitude);
-Ti.API.info('deviceLocation = '+deviceLocation.latitude+','+deviceLocation.longitude);
-Ti.API.info('poi.distance = '+poi.distance);
+//Ti.API.info('poi = '+poi.latitude+','+poi.longitude);
+//Ti.API.info('deviceLocation = '+deviceLocation.latitude+','+deviceLocation.longitude);
+//Ti.API.info('poi.distance = '+poi.distance);
 
 			if (maxRange && (poi.distance <= maxRange) ) {
 				poi.inRange = true;
@@ -242,7 +242,7 @@ Ti.API.info('poi.distance = '+poi.distance);
 				
 				positionRadarBlip(poi);
 
-Ti.API.info('poi.bearing = '+poi.bearing);
+//Ti.API.info('poi.bearing = '+poi.bearing);
 			} 
 			else {
 				// don't show pois that are beyond maxDistance
