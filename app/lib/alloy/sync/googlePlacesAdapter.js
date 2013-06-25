@@ -1,6 +1,4 @@
 module.exports.sync = function(method, model, options) {
-        
-    var globals = require('globals');
             	
     switch (method) {
     	
@@ -25,26 +23,26 @@ module.exports.sync = function(method, model, options) {
 							});
 				
 						} else {
-							globals.ajaxError('There was a problem finding place details with google.');
+							alert('There was a problem finding place details with google.');
 							options.error(this.responseText);
 						}
 					}
 				});
 				
 				var params = {
-					key: globals.googleApiKey,
+					key: Alloy.Globals.googleApiKey,
 					sensor: 'true',
 					reference: options.reference
 				};
 				
-				var request = globals.googlePlaceDetailUrl + '?' + require('utilities').serialize(params);
+				var request = Alloy.Globals.googlePlaceDetailUrl + '?' + require('utilities').serialize(params);
 				xhr.open('GET', request);
 				xhr.send();
             }
             else {
             	
 				var params = {
-					key: globals.googleApiKey,
+					key: Alloy.Globals.googleApiKey,
 					location: [options.loc.latitude, options.loc.longitude],
 					rankby: 'distance',
 					sensor: 'true',
@@ -80,7 +78,7 @@ module.exports.sync = function(method, model, options) {
 							var resp = JSON.parse(this.responseText);
 							nextPageToken = resp['next_page_token'];				
 
-Ti.API.info('adapter found places '+resp.results.length);									
+							Ti.API.info('adapter found '+resp.results.length+' places');									
 							options.success(resp.results);
 						} 
 						else {
@@ -89,7 +87,7 @@ Ti.API.info('adapter found places '+resp.results.length);
 					}
 				});
 			
-				var request = globals.googleNearbyPlacesUrl;
+				var request = Alloy.Globals.googleNearbyPlacesUrl;
 				request += '?' + require('utilities').serialize(params);
 			
 				xhr.open('GET', request);
