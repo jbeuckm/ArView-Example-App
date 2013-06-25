@@ -1,0 +1,13 @@
+<Alloy>
+	<Window id="win">
+		
+		<View id="overlay">
+
+			<Label id="overlayLabel"></Label>
+				
+			<View id="radarView"></View>
+			
+		</View>
+
+	</Window>
+</Alloy>
