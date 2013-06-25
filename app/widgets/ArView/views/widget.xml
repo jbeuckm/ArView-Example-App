@@ -1,9 +1,9 @@
 <Alloy>
 	<Window id="win">
 		
-		<View id="arContainer"/>
-		
 		<View id="overlay">
+			
+			<View id="arContainer"/>
 			
 			<Button id="closeButton" platform="ios"/>
 

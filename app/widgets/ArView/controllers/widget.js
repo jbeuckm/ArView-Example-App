@@ -78,7 +78,7 @@ function showAR() {
 		},
 		error : function(error) {
 			alert('unable to open AR Window');
-			closeAR();
+//			closeAR();
 		},
 		mediaTypes : [Ti.Media.MEDIA_TYPE_VIDEO, Ti.Media.MEDIA_TYPE_PHOTO],
 		showControls : false,
@@ -104,7 +104,7 @@ function closeAR() {
 
 
 var deviceLocation = null;
-var deviceBearing = null;
+var deviceBearing = 1;
 
 var centerY = screenHeight / 2;
 
@@ -158,25 +158,26 @@ function doClose() {
 };
 $.closeButton.addEventListener('click', closeAR);
 
+if (params.initialLocation) {
+	deviceLocation = params.initialLocation;
+}
 
 function assignPOIs(pois) {
+
+	win.pois = pois;
 
 	createRadarBlips(pois);
 	
 	addViews(pois);
 
 	if (deviceLocation && deviceBearing) {
-		updatePhysicalPoiPositions(pois);
+		updateRelativePositions(pois);
 	}
 
-	win.pois = pois;
 }
 
 if (params.pois) {
 	assignPOIs(params.pois);
-}
-if (params.initialLocation) {
-	deviceLocation = params.initialLocation;
 }
 
 function poiClick(e) {
@@ -204,7 +205,14 @@ function locationCallback(e) {
 		return;
 	}
 	else {
-		updatePhysicalPoiPositions(win.pois);
+
+		updateRelativePositions(win.pois);
+
+		for (i=0, l=win.pois.length; i<l; i++) {
+			var poi = win.pois[i];
+			updateRadarBlipPosition(poi);
+		}
+
 //		updatePoiViews(win.pois);
 	}
 };
@@ -212,9 +220,9 @@ function locationCallback(e) {
 
 
 /**
- * Calculate heading of each poi from deviceLocation
+ * Calculate heading/distance of each poi from deviceLocation
  */
-function updatePhysicalPoiPositions(pois) {
+function updateRelativePositions(pois) {
 
 	for (i=0, l=pois.length; i<l; i++) {
 
@@ -230,8 +238,9 @@ Ti.API.info('poi.distance = '+poi.distance);
 
 			if (maxRange && poi.distance < maxRange) {
 				poi.inRange = true;
-				positionRadarBlip(poi);
 				poi.bearing = calculateBearing(deviceLocation, poi);
+				
+				positionRadarBlip(poi);
 
 Ti.API.info('poi.bearing = '+poi.bearing);
 			} 
@@ -296,7 +305,7 @@ function updatePoiViews(pois) {
 		}
 		else {
 			poi.view.visible = false;
-			poi.blip.visible = false;
+//			poi.blip.visible = false;
 		}
 	}
 }
@@ -339,11 +348,13 @@ function positionRadarBlip(poi) {
 	var rad = toRad(poi.bearing);
 
 	var relativeDistance = poi.distance / (maxRange * 1.2);
-	var centerX = (40 + (relativeDistance * 40 * Math.sin(rad)));
-	var centerY = (40 - (relativeDistance * 40 * Math.cos(rad)));
+	var x = (40 + (relativeDistance * 40 * Math.sin(rad)));
+	var y = (40 - (relativeDistance * 40 * Math.cos(rad)));
 	
-	poi.blip.top = (centerY - 1) + "dp";
-	poi.blip.left = (centerX - 1) + "dp";
+	poi.blip.left = (x - 1) + "dp";
+	poi.blip.top = (y - 1) + "dp";
+	
+Ti.API.info('blip position: '+poi.blip.top+', '+poi.blip.left);	
 }
 
 

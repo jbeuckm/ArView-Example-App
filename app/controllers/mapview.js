@@ -155,7 +155,7 @@ function arViewButtonClick() {
 	arWin = require('/alloy').createWidget('ArView', null, {
 		pois : pois,
 		overlay : $.overlay,
-		maxDistance : 10000, //in m
+		maxDistance : 500, //in m
 		initialLocation: loc
 	}).getView();
 	

@@ -15,7 +15,6 @@ function Controller() {
             },
             error: function() {
                 alert("unable to open AR Window");
-                closeAR();
             },
             mediaTypes: [ Ti.Media.MEDIA_TYPE_VIDEO, Ti.Media.MEDIA_TYPE_PHOTO ],
             showControls: false,
@@ -42,10 +41,10 @@ function Controller() {
         closeAR();
     }
     function assignPOIs(pois) {
+        win.pois = pois;
         createRadarBlips(pois);
         addViews(pois);
-        deviceLocation && deviceBearing && updatePhysicalPoiPositions(pois);
-        win.pois = pois;
+        deviceLocation && deviceBearing && updateRelativePositions(pois);
     }
     function locationCallback(e) {
         deviceLocation = e.coords;
@@ -53,9 +52,13 @@ function Controller() {
             Ti.API.warn("location not known. Can't draw pois");
             return;
         }
-        updatePhysicalPoiPositions(win.pois);
+        updateRelativePositions(win.pois);
+        for (i = 0, l = win.pois.length; l > i; i++) {
+            var poi = win.pois[i];
+            updateRadarBlipPosition(poi);
+        }
     }
-    function updatePhysicalPoiPositions(pois) {
+    function updateRelativePositions(pois) {
         for (i = 0, l = pois.length; l > i; i++) {
             Ti.API.info("poi " + i);
             var poi = pois[i];
@@ -66,8 +69,8 @@ function Controller() {
                 Ti.API.info("poi.distance = " + poi.distance);
                 if (maxRange && maxRange > poi.distance) {
                     poi.inRange = true;
-                    positionRadarBlip(poi);
                     poi.bearing = calculateBearing(deviceLocation, poi);
+                    positionRadarBlip(poi);
                     Ti.API.info("poi.bearing = " + poi.bearing);
                 } else {
                     poi.inRange = false;
@@ -102,10 +105,11 @@ function Controller() {
     function positionRadarBlip(poi) {
         var rad = toRad(poi.bearing);
         var relativeDistance = poi.distance / (1.2 * maxRange);
-        var centerX = 40 + 40 * relativeDistance * Math.sin(rad);
-        var centerY = 40 - 40 * relativeDistance * Math.cos(rad);
-        poi.blip.top = centerY - 1 + "dp";
-        poi.blip.left = centerX - 1 + "dp";
+        var x = 40 + 40 * relativeDistance * Math.sin(rad);
+        var y = 40 - 40 * relativeDistance * Math.cos(rad);
+        poi.blip.left = x - 1 + "dp";
+        poi.blip.top = y - 1 + "dp";
+        Ti.API.info("blip position: " + poi.blip.top + ", " + poi.blip.left);
     }
     function findAngularDistance(theta1, theta2) {
         a = theta1 - theta2;
@@ -146,6 +150,13 @@ function Controller() {
         id: "win"
     });
     $.__views.win && $.addTopLevelView($.__views.win);
+    $.__views.overlay = Ti.UI.createView({
+        top: 0,
+        left: 0,
+        backgroundColor: "transparent",
+        id: "overlay"
+    });
+    $.__views.win.add($.__views.overlay);
     $.__views.arContainer = Ti.UI.createView({
         top: 0,
         left: 0,
@@ -154,14 +165,7 @@ function Controller() {
         backgroundColor: "transparent",
         id: "arContainer"
     });
-    $.__views.win.add($.__views.arContainer);
-    $.__views.overlay = Ti.UI.createView({
-        top: 0,
-        left: 0,
-        backgroundColor: "transparent",
-        id: "overlay"
-    });
-    $.__views.win.add($.__views.overlay);
+    $.__views.overlay.add($.__views.arContainer);
     $.__views.closeButton = Ti.UI.createButton({
         top: "5dp",
         right: "5dp",
@@ -223,7 +227,7 @@ function Controller() {
         Ti.Geolocation.purpose = "Augmented Reality";
     }
     var deviceLocation = null;
-    var deviceBearing = null;
+    var deviceBearing = 1;
     $.arContainer;
     var headingLabel = $.headingLabel;
     var radar = $.radarView;
@@ -236,8 +240,8 @@ function Controller() {
         setTimeout(showAR, 500);
     });
     $.closeButton.addEventListener("click", closeAR);
-    params.pois && assignPOIs(params.pois);
     params.initialLocation && (deviceLocation = params.initialLocation);
+    params.pois && assignPOIs(params.pois);
     exports = {
         findAngularDistance: findAngularDistance,
         calculateDistance: calculateDistance,
