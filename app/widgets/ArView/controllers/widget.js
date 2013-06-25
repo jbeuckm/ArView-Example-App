@@ -41,10 +41,30 @@ if (isAndroid) {
 }
 
 
+/*
+var accelerometerCallback = function(e) {
+  labelTimestamp.text = 'timestamp: ' + e.timestamp;
+  labelx.text = 'x: ' + e.x;
+  labely.text = 'y: ' + e.y;
+  labelz.text = 'z: ' + e.z;
+};
 
-	
-Ti.API.info('ArView() got params:')
-Ti.API.info(params)
+if (Ti.Platform.model === 'Simulator' || Ti.Platform.model.indexOf('sdk') !== -1 ){
+  alert('Accelerometer does not work on a virtual device');
+} else {
+  Ti.Accelerometer.addEventListener('update', accelerometerCallback);
+  if (Ti.Platform.name === 'android'){
+    Ti.Android.currentActivity.addEventListener('pause', function(e) {
+      Ti.API.info("removing accelerometer callback on pause");
+      Ti.Accelerometer.removeEventListener('update', accelerometerCallback);
+    });
+    Ti.Android.currentActivity.addEventListener('resume', function(e) {
+      Ti.API.info("adding accelerometer callback on resume");
+      Ti.Accelerometer.addEventListener('update', accelerometerCallback);
+    });
+  }
+}
+*/
 
 function showAR() {
 	Ti.Geolocation.addEventListener('heading', headingCallback);
@@ -80,40 +100,15 @@ function closeAR() {
 	}, 500);
 }
 
-var views = [];
-// background colors for debugging
-var showColors = false;
-var colors = ['red', 'yellow', 'pink', 'green', 'purple', 'orange', 'blue', 'aqua', 'white', 'silver'];
-
-var numberOfViews = 9;
-var myLocation = null;
 
 
 
-// Create all the view that will contain the points of interest
-for (var i = 0; i < numberOfViews; i++) {
-	// create a view 1.6x the screen width
-	// they will overlap so any poi view that
-	// are near the edge will continue over into the
-	// 'next' view.
-	views[i] = Ti.UI.createView({
-		top : 0,
-		height : screenHeight,
-		right : 0,
-		width : screenWidth * 1.6,
-		visible : false
-	});
+var deviceLocation = null;
+var deviceBearing = null;
 
-	if (showColors) {
-		views[i].backgroundColor = colors[i];
-		views[i].opacity = 0.5;
-	}
+var centerY = screenHeight / 2;
 
-	overlay.add(views[i]);
-};
-
-
-
+var arContainer = $.arContainer;
 var headingLabel = $.headingLabel;
 var radar = $.radarView;
 
@@ -121,64 +116,69 @@ if (params.overlay) {
 	overlay.add(params.overlay);
 }
 
-if (!isAndroid) {
 
-	var button = Ti.UI.createButton({
-		top : '5dp',
-		right : '5dp',
-		height : '45dp',
-		width : '45dp',
-		backgroundImage : WPATH('/images/ArView/close.png')
-	});
 
-	button.addEventListener('click', closeAR);
+// iPhone camera sees about 30 degrees left to right
+var FIELD_OF_VIEW = 30;
 
-	overlay.add(button);
 
-}
-
-var lastActiveView = -1;
-var viewChange = false;
-var centerY = screenHeight / 2;
-var activePois;
-
+/**
+ * Compass has indicated a new heading
+ * 
+ * @param {Object} e
+ */
 function headingCallback(e) {
 
-	var currBearing = e.heading.trueHeading;
-	var internalBearing = currBearing / (360 / views.length);
+	deviceBearing = e.heading.trueHeading;
 
 	// REM this if you don't want the user to see their heading
-	headingLabel.text = Math.floor(currBearing) + "\xB0";
+	headingLabel.text = Math.floor(deviceBearing) + "\xB0";
 
 	// point the radar view
-	radar.transform = Ti.UI.create2DMatrix().rotate(-1 * currBearing);
+	radar.transform = Ti.UI.create2DMatrix().rotate(-1 * deviceBearing);
+	
+	updatePoiViews(win.pois);
 }
 
 
 var win = $.win;
 
-if (params.maxDistance) {
-	win.maxDistance = params.maxDistance;
-}
+var maxRange = 1000;
 
-win.doClose = function() {
-	closeAR();
-};
+if (params.maxDistance) {
+	maxRange = params.maxDistance;
+}
 
 win.addEventListener('open', function() {
 	Ti.API.debug('AR Window Open...');
 	setTimeout(showAR, 500);
 });
+function doClose() {
+	closeAR();
+};
+$.closeButton.addEventListener('click', closeAR);
 
-win.assignPOIs = function(pois) {
+
+function assignPOIs(pois) {
+
+	createRadarBlips(pois);
+	addViews(pois);
+
+	if (deviceLocation && deviceBearing) {
+		updatePhysicalPoiPositions(pois);
+	}
+
 	win.pois = pois;
-	// TODO - something here to make sure the pois redraw
-	// even if the location doesn't update
 }
+
+if (params.pois) {
+	assignPOIs(params.pois);
+}
+
 function poiClick(e) {
 	Ti.API.debug('heard a click');
 	Ti.API.debug('number=' + e.source.number);
-	var poi = activePois[e.source.number];
+	var poi = inRangePois[e.source.number];
 	var view = poi.view;
 	view.fireEvent('click', {
 		source : poi.view,
@@ -186,210 +186,179 @@ function poiClick(e) {
 	});
 }
 
+
+/**
+ * Device has indicated a new location
+ * @param {Object} e
+ */
 function locationCallback(e) {
-	myLocation = e.coords;
-	redrawPois();
+
+	deviceLocation = e.coords;
+	
+	if (!deviceLocation) {
+		Ti.API.warn("location not known. Can't draw pois");
+		return;
+	}
+	else {
+		updatePhysicalPoiPositions(win.pois);
+		updatePoiViews(win.pois);
+	}
 };
 
 
 
+/**
+ * Calculate heading of each poi from deviceLocation
+ */
+function updatePhysicalPoiPositions(pois) {
 
+	for (i=0, l=pois.length; i<l; i++) {
 
-
-function redrawPois() {
-
-	if (!myLocation) {
-		Ti.API.warn("location not known. Can't draw pois");
-		return;
-	}
-
-	// remove any existing views
-	for (var i = 0; i < views.length; i++) {
-		var view = views[i];
-		if (view.children) {
-			if (view.children.length > 0) {
-				for (var j = view.children.length; j > 0; j--) {
-					try {
-						view.remove(view.children[j - 1]);
-					} catch (e) {
-						Ti.API.error('error removing child ' + j + ' from view');
-					}
-				}
-			}
-		}
-	}
-
-	// remove all children from radar
-	if (radar.children.length > 0) {
-		for (var j = radar.children.length; j > 0; j--) {
-			try {
-				radar.remove(view.children[j - 1]);
-			} 
-			catch (e) {
-				Ti.API.error('error removing child ' + j + ' from radar');
-			}
-		}
-	}
-
-	// Draw the Points of Interest on the Views
-	activePois = [];
-
-	for (var i = 0; i < win.pois.length; i++) {
-		var poi = win.pois[i];
+Ti.API.info('poi '+i);
+		var poi = pois[i];
+		
 		if (poi.view) {
-			var distance = exports.calculateDistance(myLocation, poi);
-			var addPoint = true;
-			if (win.maxDistance && distance > win.maxDistance) {
-				addPoint = false;
-			}
-			if (addPoint) {
-				var bearing = exports.calculateBearing(myLocation, poi);
-				var internalBearing = bearing / (360 / views.length);
-				var activeView = Math.floor(internalBearing);
-				if (activeView >= views.length) {
-					activeView = 0;
-				}
-				var pixelOffset = Math.floor((internalBearing % 1) * screenWidth) + ((views[0].width - screenWidth) / 2);
-				poi.distance = distance;
-				poi.pixelOffset = pixelOffset;
-				poi.activeView = activeView;
-				poi.bearing = bearing;
-				activePois.push(poi);
-			} else {
-				Ti.API.debug(poi.title + " not added, maxDistance=" + win.maxDistance);
+
+			poi.distance = calculateDistance(deviceLocation, poi);
+Ti.API.info('poi.distance = '+poi.distance);
+			if (maxRange && poi.distance < maxRange) {
+				poi.inRange = true;
+				positionRadarBlip(poi);
+				poi.bearing = calculateBearing(deviceLocation, poi);
+			} 
+			else {
+				// don't show pois that are beyond maxDistance
+				poi.inRange = false;
+				Ti.API.debug(poi.title + " not added, maxRange=" + maxRange);
 			}
 		}
-
+		else {
+			// don't show pois that don't have views
+			poi.inRange = false;
+		}
 	}
 
 	// Sort by Distance
-	activePois.sort(function(a, b) {
+	pois.sort(function(a, b) {
 		return b.distance - a.distance;
 	});
 
-	var maxDistance = activePois[0].distance;
-	var minDistance = activePois[activePois.length - 1].distance;
-	var distanceDelta = maxDistance - minDistance;
+}
 
-	// Add the view
-	for (var i = 0; i < activePois.length; i++) {
+var limitLeft = -50;
+var limitRight = screenWidth + 50;
 
-		var poi = activePois[i];
+function updatePoiViews(pois) {
 
-		Ti.API.debug('poi = '+poi.title);
-		Ti.API.debug('bearing=' + poi.bearing);
+	for (i=0, l=pois.length; i<l; i++) {
 
-		if (showColors) {
-			Ti.API.debug('viewColor=' + views[poi.activeView].backgroundColor);
+		var poi = pois[i];
+		
+		if (poi.inRange) {
+			
+			poi.blip.visible = true;
+
+			var positionInScene = projectBearingIntoScene(poi.bearing);
+	
+			if ((positionInScene > limitLeft) && (positionInScene < limitRight)) {
+				poi.view.visible = true;
+/*	
+				// Calcuate the Scaling (for distance)
+				var distanceFromSmallest = poi.distance - minDistance;
+				var percentFromSmallest = 1 - (distanceFromSmallest / distanceDelta);
+				var zoom = (percentFromSmallest * DELTA_ZOOM) + MIN_ZOOM;
+				// Calculate the y (farther away = higher )
+				var y = MIN_Y + (percentFromSmallest * DELTA_Y);
+				
+				var view = poi.view;
+				// Apply the transform
+				var transform = Ti.UI.create2DMatrix();
+				transform = transform.scale(zoom);
+				view.transform = transform;
+*/	
+				view.center = {
+					x : positionInScene,
+					y : 200
+				};
+			}
+			else {
+				poi.view.visible = false;
+			}
 		}
-
-		// Calcuate the Scaling (for distance)
-		var distanceFromSmallest = poi.distance - minDistance;
-		var percentFromSmallest = 1 - (distanceFromSmallest / distanceDelta);
-		var zoom = (percentFromSmallest * DELTA_ZOOM) + MIN_ZOOM;
-		// Calculate the y (farther away = higher )
-		var y = MIN_Y + (percentFromSmallest * DELTA_Y);
-		var view = poi.view;
-		// Apply the transform
-		var transform = Ti.UI.create2DMatrix();
-		transform = transform.scale(zoom);
-		view.transform = transform;
-		Ti.API.debug('pixelOffset=' + poi.pixelOffset);
-		view.center = {
-			x : poi.pixelOffset,
-			y : y
-		};
-
-		// Testing Click Handlers
-		if (view.clickHandler) {
-			view.clickHandler.removeEventListener('click', poiClick);
-			view.remove(view.clickHandler);
-			view.clickHandler = null;
+		else {
+			poi.view.visible = false;
+			poi.blip.visible = false;
 		}
-		var clickHandler = Ti.UI.createView({
-			width : Ti.UI.FILL,
-			height : Ti.UI.FILL
-		});
-		var number = i;
-		clickHandler.number = number;
-		clickHandler.addEventListener('click', poiClick);
-		view.add(clickHandler);
-		view.clickHandler = clickHandler;
+	}
+}
 
-		views[poi.activeView].add(view);
 
-		Ti.API.debug('viewSize=' + view.width + "," + view.height);
+function addViews(pois) {
+	
+	for (i=0, l=pois.length; i<l; i++) {
+		var poi = pois[i];
+		$.arContainer.add(poi.view);
+	}
+}
 
-		// need to create a second click handler
-		// on the closest view in case there is overlap
-		var clickHandler2 = Ti.UI.createView({
-			width : view.width,
-			height : view.height,
-			transform : transform
-		});
+function createRadarBlips(pois) {
 
-		clickHandler2.number = number;
-		clickHandler2.addEventListener('click', poiClick);
+	for (i=0, l=pois.length; i<l; i++) {
 
-		var nextView;
-		var nextOffset;
-		if (poi.pixelOffset > (views[0].width / 2 )) {
-			nextView = poi.activeView + 1;
-			nextOffset = poi.pixelOffset - screenWidth;
-		} else {
-			nextView = poi.activeView - 1;
-			nextOffset = poi.pixelOffset + screenWidth;
-		}
-
-		if (nextView < 0) {
-			nextView = views.length - 1;
-		} else if (nextView == views.length) {
-			nextView = 0;
-		}
-
-		Ti.API.debug('nextView=' + nextView);
-		Ti.API.debug('nextOffset=' + nextOffset);
-
-		clickHandler2.center = {
-			x : nextOffset,
-			y : y
-		};
-		views[nextView].add(clickHandler2);
-		// End Click Handlers
-
+		var poi = pois[i];
 		// add to blip to the radar
 		// The Radar Blips ....
-		var rad = toRad(poi.bearing);
-		var relativeDistance = poi.distance / (maxDistance * 1.2);
-		var centerX = (40 + (relativeDistance * 40 * Math.sin(rad)));
-		var centerY = (40 - (relativeDistance * 40 * Math.cos(rad)));
 
 		var displayBlip = Ti.UI.createView({
 			height : '3dp',
 			width : '3dp',
 			backgroundColor : 'white',
 			borderRadius : 2,
-			top : (centerY - 1) + "dp",
-			left : (centerX - 1) + "dp"
 		});
 		radar.add(displayBlip);
-
+		
+		poi.blip = displayBlip;
 	}
-
-};
-
-
-
-if (params.pois) {
-	win.assignPOIs(params.pois);
 }
 
+
+function positionRadarBlip(poi) {
+
+	var rad = toRad(poi.bearing);
+
+	var relativeDistance = poi.distance / (maxRange * 1.2);
+	var centerX = (40 + (relativeDistance * 40 * Math.sin(rad)));
+	var centerY = (40 - (relativeDistance * 40 * Math.cos(rad)));
+	
+	poi.blip.top = (centerY - 1) + "dp";
+	poi.blip.left = (centerX - 1) + "dp";
+}
+
+
+
+/**
+ * Calculate the pixel left/right position of a particular bearing, using device bearing.
+ * 
+ * @param {Object} poiBearing
+ */
+function projectBearingIntoScene(poiBearing) {
+	
+	return screenWidth/2 + exports.findAngularDistance(poiBearing - deviceBearing) * screenWidth / FIELD_OF_VIEW;
+
+}
+
+
+function findAngularDistance(theta1, theta2) {
+	a = theta1 - theta2;
+	if (a > 180) a -= 360;
+	if (a < -180) a += 360;
+}
 
 function toRad(val) {
 	return val * Math.PI / 180;
 };
 
-exports.calculateBearing = function(point1, point2) {
+function calculateBearing(point1, point2) {
 	var lat1 = toRad(point1.latitude);
 	var lat2 = toRad(point2.latitude);
 	var dlng = toRad((point2.longitude - point1.longitude));
@@ -399,7 +368,7 @@ exports.calculateBearing = function(point1, point2) {
 	return ((brng * (180 / Math.PI)) + 360) % 360;
 };
 
-exports.calculateDistance = function(loc1, loc2) {
+function calculateDistance(loc1, loc2) {
 	var R = 6371;
 	// Radius of the earth in km
 	var dLat = (toRad(loc2.latitude - loc1.latitude));
@@ -409,5 +378,15 @@ exports.calculateDistance = function(loc1, loc2) {
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	// Distance in m
 	return R * c * 1000;
+};
+
+
+exports = {
+	findAngularDistance: findAngularDistance,
+	calculateDistance: calculateDistance,
+	calculateBearing: calculateBearing,
+	toRad: toRad,
+	doClose: doClose,
+	closeAR: closeAR
 };
 

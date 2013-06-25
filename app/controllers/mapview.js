@@ -46,7 +46,7 @@ function createMapAnnotationsFromPois(pois) {
 	
 	var annotations = [];
 
-	for (var i = 0; i < pois.length; i++) {
+	for (var i=0; i < pois.length; i++) {
 		
 		var poi = pois[i];
 		
@@ -144,7 +144,7 @@ function arViewButtonClick() {
 	arWin = require('/alloy').createWidget('ArView', null, {
 		pois : pois,
 		overlay : $.overlay,
-		maxDistance : 10000 //in m
+		maxDistance : 1000 //in m
 	}).getView();
 	
 	arWin.addEventListener('close', function() {
@@ -177,7 +177,6 @@ Alloy.Collections.GooglePlace = Alloy.createCollection('GooglePlace');
 
 Alloy.Collections.GooglePlace.on('reset', function(e){ 
 	var places = Alloy.Collections.GooglePlace.toJSON();
-	
 	
 	for (i=0, l=places.length; i<l; i++) {
 		pois.push(convertGooglePlaceToPoi(places[i]));

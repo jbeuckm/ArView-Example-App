@@ -80,7 +80,7 @@ function Controller() {
         arWin = require("/alloy").createWidget("ArView", null, {
             pois: pois,
             overlay: $.overlay,
-            maxDistance: 1e4
+            maxDistance: 1e3
         }).getView();
         arWin.addEventListener("close", function() {
             arWindowOpen = false;

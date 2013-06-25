@@ -1,7 +1,11 @@
 <Alloy>
 	<Window id="win">
 		
+		<View id="arContainer"/>
+		
 		<View id="overlay">
+			
+			<Button id="closeButton" platform="ios"/>
 
 			<View id="radarView"></View>
 			

@@ -5,6 +5,21 @@ Window: {
 	orientationModes : [Ti.UI.PORTRAIT]
 }
 
+'#arContainer': {
+	top : 0,
+	left : 0,
+	width: Ti.UI.FILL,
+	height: Ti.UI.FILL,
+	backgroundColor : 'transparent'
+}
+
+'#closeButton': {
+	top : '5dp',
+	right : '5dp',
+	height : '45dp',
+	width : '45dp',
+	backgroundImage : '/images/ArView/close.png'
+}
 
 '#overlay': {
 	top : 0,
