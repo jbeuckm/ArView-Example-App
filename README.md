@@ -5,20 +5,20 @@ The purpose of this "port" is to create an Alloy Widget and keep working on the 
 
 ## Main Differences ##
 
-* Alloy widget vs. pure Titanium (basically and increasingly)
+* Alloy widget vs. pure Titanium (increasingly Alloy at least)
 
-* Jeff wrapped 360 degrees with a series of overlay views that had the AR tags placed on them. This widget uses one overlay view and moves them within that one view.
+* Jeff wrapped 360 degrees with a series of overlay views that had the AR tags placed on them. This widget uses one overlay view and moves AR tags within that one view.
 
-* Jeff's example used a static list of POIs near Melbourne. This example loads a Google Places list of POIs near Minneapolis or San Francisco (device and simulator respectively).
+* Jeff's example used a static list of POIs near Melbourne. This example loads a Google Places list of POIs near Minneapolis or San Francisco (device or simulator respectively).
 
 
 ## Usage ##
 
 1. Change Google Places API key
 
-1.1. Head over to [Google's API Console](https://code.google.com/apis/console/) and create a new App. Enable the Places API and copy your new API key 
+Head over to [Google's API Console](https://code.google.com/apis/console/) and create a new App. Enable the Places API and copy your new API key 
 
-1.2. In alloy.js, enter your API key for the global variable `Alloy.Globals.googleApiKey`
+In alloy.js, enter your API key for the global variable `Alloy.Globals.googleApiKey`
 
 2. Instantiate the widget
 
