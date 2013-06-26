@@ -61,17 +61,22 @@ function Controller() {
         updatePoiViews();
     }
     function updateRelativePositions() {
+        minPoiDistance = 1e6;
+        maxPoiDistance = 0;
         for (i = 0, l = pois.length; l > i; i++) {
             var poi = pois[i];
             if (poi.view) {
                 poi.distance = calculateDistance(deviceLocation, poi);
                 if (maxRange && maxRange >= poi.distance) {
+                    maxPoiDistance = Math.max(maxPoiDistance, poi.distance);
+                    minPoiDistance = Math.min(minPoiDistance, poi.distance);
                     poi.inRange = true;
                     poi.bearing = calculateBearing(deviceLocation, poi);
                     positionRadarBlip(poi);
                 } else poi.inRange = false;
             } else poi.inRange = false;
         }
+        poiDistanceRange = maxPoiDistance - minPoiDistance;
         pois.sort(function(a, b) {
             return b.distance - a.distance;
         });
@@ -84,12 +89,13 @@ function Controller() {
                 var horizontalPositionInScene = projectBearingIntoScene(poi.bearing);
                 if (horizontalPositionInScene > limitLeft && limitRight > horizontalPositionInScene) {
                     poi.view.visible = true;
-                    var y = BASE_Y - poi.distance / 5;
-                    var view = poi.view;
                     var transform = Ti.UI.create2DMatrix();
-                    transform = transform.scale(500 / poi.distance);
+                    var distanceRank = (poi.distance - minPoiDistance) / poiDistanceRange;
+                    var y = lowY + distanceRank * yRange;
                     transform = transform.translate(horizontalPositionInScene, y);
-                    view.transform = transform;
+                    var scale = maxPoiScale - distanceRank * poiScaleRange;
+                    transform = transform.scale(scale);
+                    poi.view.transform = transform;
                 } else poi.view.visible = false;
             } else {
                 poi.view.visible = false;
@@ -102,6 +108,7 @@ function Controller() {
             var poi = pois[i];
             if (poi.view) {
                 $.arContainer.add(poi.view);
+                poi.view.visible = false;
                 poi.inRange = true;
             }
         }
@@ -268,9 +275,15 @@ function Controller() {
     $.closeButton.addEventListener("click", closeAR);
     params.initialLocation && (deviceLocation = params.initialLocation);
     params.pois && assignPOIs(params.pois);
-    var limitLeft = -50;
-    var limitRight = screenWidth + 50;
-    var BASE_Y = screenHeight / 6;
+    var minPoiDistance, maxPoiDistance;
+    var minPoiScale = .3, maxPoiScale = 1;
+    var poiScaleRange = maxPoiScale - minPoiScale;
+    var halfScreenWidth = screenWidth / 2;
+    var limitLeft = -halfScreenWidth - 100;
+    var limitRight = +halfScreenWidth + 100;
+    var lowY = .8 * (screenHeight / 2);
+    var highY = .8 * (-screenHeight / 2);
+    var yRange = highY - lowY;
     exports = {
         findAngularDistance: findAngularDistance,
         calculateDistance: calculateDistance,

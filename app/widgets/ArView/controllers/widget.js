@@ -219,11 +219,18 @@ function headingCallback(e) {
 	updatePoiViews();
 }
 
+var minPoiDistance, maxPoiDistance;
+var distanceRange = 1;
+var minPoiScale = .3, maxPoiScale = 1;
+var poiScaleRange = maxPoiScale - minPoiScale;
 
 /**
  * Calculate heading/distance of each poi from deviceLocation
  */
 function updateRelativePositions() {
+	
+	minPoiDistance = 1000000;
+	maxPoiDistance = 0;
 
 	for (i=0, l=pois.length; i<l; i++) {
 
@@ -238,6 +245,10 @@ function updateRelativePositions() {
 //Ti.API.info('poi.distance = '+poi.distance);
 
 			if (maxRange && (poi.distance <= maxRange) ) {
+				
+				maxPoiDistance = Math.max(maxPoiDistance, poi.distance);
+				minPoiDistance = Math.min(minPoiDistance, poi.distance);
+				
 				poi.inRange = true;
 				poi.bearing = calculateBearing(deviceLocation, poi);
 				
@@ -256,6 +267,8 @@ function updateRelativePositions() {
 			poi.inRange = false;
 		}
 	}
+	
+	poiDistanceRange = maxPoiDistance - minPoiDistance;
 
 	// Sort by Distance
 	pois.sort(function(a, b) {
@@ -264,11 +277,13 @@ function updateRelativePositions() {
 
 }
 
-var limitLeft = -50;
-var limitRight = screenWidth + 50;
-
 var halfScreenWidth = screenWidth / 2;
-var BASE_Y = screenHeight/6;
+var limitLeft = -halfScreenWidth - 100;
+var limitRight = +halfScreenWidth + 100;
+
+var lowY = screenHeight/2 * .8;
+var highY = -screenHeight/2 * .8;
+var yRange = highY - lowY;
 
 function updatePoiViews() {
 
@@ -285,23 +300,21 @@ function updatePoiViews() {
 
 			if ((horizontalPositionInScene > limitLeft) && (horizontalPositionInScene < limitRight)) {
 				poi.view.visible = true;
-/*	
-				// Calcuate the Scaling (for distance)
-				var distanceFromSmallest = poi.distance - minDistance;
-				var percentFromSmallest = 1 - (distanceFromSmallest / distanceDelta);
-				var zoom = (percentFromSmallest * DELTA_ZOOM) + MIN_ZOOM;
-				// Calculate the y (farther away = higher )
-				var y = MIN_Y + (percentFromSmallest * DELTA_Y);
-*/				
-				var y = BASE_Y - poi.distance / 5;
 
-				var view = poi.view;
 				// Apply the transform
 				var transform = Ti.UI.create2DMatrix();
-				transform = transform.scale(500 / poi.distance);
+
+				var distanceRank = (poi.distance - minPoiDistance) / poiDistanceRange;
+
+				var y = lowY + distanceRank * yRange;
 				// this translation is from the center of the screen
 				transform = transform.translate(horizontalPositionInScene, y);
-				view.transform = transform;
+
+
+				var scale = maxPoiScale - distanceRank * poiScaleRange;
+				transform = transform.scale(scale);
+
+				poi.view.transform = transform;
 				
 			}
 			else {
@@ -322,6 +335,7 @@ function addViews() {
 		var poi = pois[i];
 		if (poi.view) {
 			$.arContainer.add(poi.view);
+			poi.view.visible = false;
 			poi.inRange = true;
 		}
 	}
