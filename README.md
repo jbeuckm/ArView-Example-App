@@ -16,9 +16,9 @@ The purpose of this "port" is to create an Alloy Widget and keep working on the 
 
 1. Change Google Places API key
 
-Head over to [Google's API Console](https://code.google.com/apis/console/) and create a new App. Enable the Places API and copy your new API key 
+   Head over to [Google's API Console](https://code.google.com/apis/console/) and create a new App. Enable the Places API and copy your new API key 
 
-In alloy.js, enter your API key for the global variable `Alloy.Globals.googleApiKey`
+   In alloy.js, enter your API key for the global variable `Alloy.Globals.googleApiKey`
 
 2. Instantiate the widget
 
@@ -31,5 +31,5 @@ In alloy.js, enter your API key for the global variable `Alloy.Globals.googleApi
 	}).getView();
 ```
 
-* `pois' is an array of objects representing places to be tagged in the view.
-* `overlay' is a view, possibly a title view, etc. that should sit on top of the ArView.
+   * `pois' is an array of objects representing places to be tagged in the view.
+   * `overlay' is a view, possibly a title view, etc. that should sit on top of the ArView.
