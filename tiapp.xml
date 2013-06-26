@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><ti:app xmlns:ti="http://ti.appcelerator.org">
+<?xml version="1.0" encoding="UTF-8"?>
+<ti:app xmlns:ti="http://ti.appcelerator.org">
     <deployment-targets>
         <target device="tizen">false</target>
         <target device="mobileweb">false</target>
@@ -8,13 +9,13 @@
         <target device="blackberry">false</target>
     </deployment-targets>
     <sdk-version>3.1.1.GA</sdk-version>
-    <id>com.gameshape.parmavision</id>
-    <name>Parmavision</name>
-    <version>1.0</version>
-    <publisher>jeff</publisher>
-    <url>http://www.titaniumdevelopment.com.au</url>
+    <id>com.beuckman.arview.example</id>
+    <name>ArView Widget</name>
+    <version>0.5.0</version>
+    <publisher>Joe Beuckman</publisher>
+    <url>http://www.beigerecords.com/joe</url>
     <description>not specified</description>
-    <copyright>2012 by jeff</copyright>
+    <copyright>nope, left</copyright>
     <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
@@ -46,6 +47,7 @@
         <theme>default</theme>
     </mobileweb>
     <modules/>
-<plugins><plugin version="1.0">ti.alloy</plugin>
-</plugins>
+    <plugins>
+        <plugin version="1.0">ti.alloy</plugin>
+    </plugins>
 </ti:app>

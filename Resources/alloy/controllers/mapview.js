@@ -1,16 +1,7 @@
 function Controller() {
-    function createMapAnnotationsFromPois(pois) {
-        var annotations = [];
+    function attachArViewsToPois(pois) {
         for (var i = 0; pois.length > i; i++) {
             var poi = pois[i];
-            var annotation = Ti.Map.createAnnotation({
-                latitude: poi.latitude,
-                longitude: poi.longitude,
-                pincolor: Ti.Map.ANNOTATION_RED,
-                title: poi.title,
-                subtitle: poi.address
-            });
-            annotations.push(annotation);
             var view = Ti.UI.createView({
                 height: "150dp",
                 width: "150dp",
@@ -56,6 +47,20 @@ function Controller() {
                 alert(e.poi.title + " got a click!");
             });
             poi.view = view;
+        }
+    }
+    function createMapAnnotationsFromPois(pois) {
+        var annotations = [];
+        for (var i = 0; pois.length > i; i++) {
+            var poi = pois[i];
+            var annotation = Ti.Map.createAnnotation({
+                latitude: poi.latitude,
+                longitude: poi.longitude,
+                pincolor: Ti.Map.ANNOTATION_RED,
+                title: poi.title,
+                subtitle: poi.address
+            });
+            annotations.push(annotation);
         }
         return annotations;
     }
@@ -181,6 +186,7 @@ function Controller() {
         var places = Alloy.Collections.GooglePlace.toJSON();
         for (i = 0, l = places.length; l > i; i++) pois.push(convertGooglePlaceToPoi(places[i]));
         var anns = createMapAnnotationsFromPois(pois);
+        attachArViewsToPois(pois);
         showMap(anns);
         isAndroid ? titleBar.add($.arViewButton) : win.rightNavButton = $.arViewButton;
     });

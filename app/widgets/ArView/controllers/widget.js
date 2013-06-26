@@ -15,7 +15,8 @@ if (isAndroid) {
 var overlay = $.overlay;
 overlay.height = screenHeight;
 overlay.width = screenWidth;
-
+$.arContainer.height = screenHeight;
+$.arContainer.width = screenWidth;
 
 var MAX_ZOOM = 1.0;
 var MIN_ZOOM = 0.35;
@@ -266,6 +267,9 @@ function updateRelativePositions() {
 var limitLeft = -50;
 var limitRight = screenWidth + 50;
 
+var halfScreenWidth = screenWidth / 2;
+var BASE_Y = screenHeight/6;
+
 function updatePoiViews() {
 
 	for (i=0, l=pois.length; i<l; i++) {
@@ -277,7 +281,7 @@ function updatePoiViews() {
 			poi.blip.visible = true;
 
 			var horizontalPositionInScene = projectBearingIntoScene(poi.bearing);
-Ti.API.info('horizontalPositionInScene = '+horizontalPositionInScene);
+//Ti.API.info('horizontalPositionInScene = '+horizontalPositionInScene);
 
 			if ((horizontalPositionInScene > limitLeft) && (horizontalPositionInScene < limitRight)) {
 				poi.view.visible = true;
@@ -288,17 +292,17 @@ Ti.API.info('horizontalPositionInScene = '+horizontalPositionInScene);
 				var zoom = (percentFromSmallest * DELTA_ZOOM) + MIN_ZOOM;
 				// Calculate the y (farther away = higher )
 				var y = MIN_Y + (percentFromSmallest * DELTA_Y);
-				
+*/				
+				var y = BASE_Y - poi.distance / 5;
+
 				var view = poi.view;
 				// Apply the transform
 				var transform = Ti.UI.create2DMatrix();
-				transform = transform.scale(zoom);
+				transform = transform.scale(500 / poi.distance);
+				// this translation is from the center of the screen
+				transform = transform.translate(horizontalPositionInScene, y);
 				view.transform = transform;
-*/	
-				poi.view.center = {
-					x : horizontalPositionInScene,
-					y : 200
-				};
+				
 			}
 			else {
 				poi.view.visible = false;
@@ -360,7 +364,7 @@ function positionRadarBlip(poi) {
 	poi.blip.left = (x - 1) + "dp";
 	poi.blip.top = (y - 1) + "dp";
 	
-Ti.API.info('blip position: '+poi.blip.top+', '+poi.blip.left);	
+//Ti.API.info('blip position: '+poi.blip.top+', '+poi.blip.left);	
 }
 
 
@@ -373,8 +377,8 @@ Ti.API.info('blip position: '+poi.blip.top+', '+poi.blip.left);
 function projectBearingIntoScene(poiBearing) {
 
 	var delta = findAngularDistance(poiBearing, deviceBearing);
-Ti.API.info('delta = '+delta);	
-	return screenWidth/2 + delta * screenWidth / FIELD_OF_VIEW;
+//Ti.API.info('delta = '+delta);	
+	return delta * screenWidth / FIELD_OF_VIEW;
 
 }
 

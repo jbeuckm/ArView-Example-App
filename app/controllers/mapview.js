@@ -53,7 +53,7 @@ var arWindowOpen = false;
 
 
 	
-function createMapAnnotationsFromPois(pois) {
+function attachArViewsToPois(pois) {
 	
 	var annotations = [];
 
@@ -61,14 +61,6 @@ function createMapAnnotationsFromPois(pois) {
 		
 		var poi = pois[i];
 		
-		var annotation = Ti.Map.createAnnotation({
-			latitude : poi.latitude,
-			longitude : poi.longitude,
-			pincolor : Ti.Map.ANNOTATION_RED,
-			title : poi.title,
-			subtitle : poi.address
-		});
-		annotations.push(annotation);
 		// add the view to the parma
 		var view = Ti.UI.createView({
 			height : '150dp',
@@ -119,6 +111,25 @@ function createMapAnnotationsFromPois(pois) {
 			alert(e.poi.title + ' got a click!');
 		});
 		poi.view = view;
+	}
+}
+
+function createMapAnnotationsFromPois(pois) {
+	
+	var annotations = [];
+
+	for (var i=0; i < pois.length; i++) {
+		
+		var poi = pois[i];
+		
+		var annotation = Ti.Map.createAnnotation({
+			latitude : poi.latitude,
+			longitude : poi.longitude,
+			pincolor : Ti.Map.ANNOTATION_RED,
+			title : poi.title,
+			subtitle : poi.address
+		});
+		annotations.push(annotation);
 
 	}
 	
@@ -195,6 +206,8 @@ Alloy.Collections.GooglePlace.on('reset', function(e){
 	}
 	
 	var anns = createMapAnnotationsFromPois(pois);
+	
+	attachArViewsToPois(pois);
 
 	showMap(anns);
 

@@ -82,13 +82,14 @@ function Controller() {
             if (poi.inRange) {
                 poi.blip.visible = true;
                 var horizontalPositionInScene = projectBearingIntoScene(poi.bearing);
-                Ti.API.info("horizontalPositionInScene = " + horizontalPositionInScene);
                 if (horizontalPositionInScene > limitLeft && limitRight > horizontalPositionInScene) {
                     poi.view.visible = true;
-                    poi.view.center = {
-                        x: horizontalPositionInScene,
-                        y: 200
-                    };
+                    var y = BASE_Y - poi.distance / 5;
+                    var view = poi.view;
+                    var transform = Ti.UI.create2DMatrix();
+                    transform = transform.scale(500 / poi.distance);
+                    transform = transform.translate(horizontalPositionInScene, y);
+                    view.transform = transform;
                 } else poi.view.visible = false;
             } else {
                 poi.view.visible = false;
@@ -127,12 +128,10 @@ function Controller() {
         var y = 40 - 40 * relativeDistance * Math.cos(rad);
         poi.blip.left = x - 1 + "dp";
         poi.blip.top = y - 1 + "dp";
-        Ti.API.info("blip position: " + poi.blip.top + ", " + poi.blip.left);
     }
     function projectBearingIntoScene(poiBearing) {
         var delta = findAngularDistance(poiBearing, deviceBearing);
-        Ti.API.info("delta = " + delta);
-        return screenWidth / 2 + delta * screenWidth / FIELD_OF_VIEW;
+        return delta * screenWidth / FIELD_OF_VIEW;
     }
     function findAngularDistance(theta1, theta2) {
         var a = theta1 - theta2;
@@ -184,8 +183,8 @@ function Controller() {
     $.__views.arContainer = Ti.UI.createView({
         top: 0,
         left: 0,
-        width: Ti.UI.FILL,
-        height: Ti.UI.FILL,
+        width: "100%",
+        height: "100%",
         backgroundColor: "transparent",
         id: "arContainer"
     });
@@ -237,6 +236,8 @@ function Controller() {
     var overlay = $.overlay;
     overlay.height = screenHeight;
     overlay.width = screenWidth;
+    $.arContainer.height = screenHeight;
+    $.arContainer.width = screenWidth;
     Math.floor(screenHeight / 6);
     Math.floor(3 * (screenHeight / 4));
     Ti.Geolocation.headingFilter = 1;
@@ -269,6 +270,7 @@ function Controller() {
     params.pois && assignPOIs(params.pois);
     var limitLeft = -50;
     var limitRight = screenWidth + 50;
+    var BASE_Y = screenHeight / 6;
     exports = {
         findAngularDistance: findAngularDistance,
         calculateDistance: calculateDistance,
