@@ -6,12 +6,12 @@ describe("ArView Widget Tests", function() {
 	var arview = Alloy.createWidget("ArView");
 
 
-	describe("can calculate angles", function() {
+	describe("can calculate diference in angle", function() {
 
-		it("calculates angular distance", function() {
+		it("calculates angular difference", function() {
 			
 			var diff = arview.findAngularDistance(10, 20);
-			expect(diff).toEqual(10);
+			expect(diff).toEqual(-10);
 
 			var diff = arview.findAngularDistance(10, 350);
 			expect(diff).toEqual(20);
