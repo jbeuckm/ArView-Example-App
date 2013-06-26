@@ -5,6 +5,7 @@ function WPATH(s) {
 }
 
 function Controller() {
+    function accelerate() {}
     function showAR() {
         Ti.Geolocation.addEventListener("heading", headingCallback);
         Ti.Geolocation.addEventListener("location", locationCallback);
@@ -259,6 +260,7 @@ function Controller() {
         Ti.Geolocation.accuracy = Ti.Geolocation.ACCURACY_NEAREST_TEN_METERS;
         Ti.Geolocation.purpose = "Augmented Reality";
     }
+    require(WPATH("accelerometer")).setupCallback(accelerate);
     var deviceLocation = null;
     var deviceBearing = 1;
     $.arContainer;

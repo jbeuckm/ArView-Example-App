@@ -42,28 +42,10 @@ if (isAndroid) {
 }
 
 
-/*
-var accelerometerCallback = function(e) {
-	if (Math.random() < .01)
-	Ti.API.info(e.x + ',' + e.y + ',' + e.z);
-};
-
-if (Ti.Platform.model === 'Simulator' || Ti.Platform.model.indexOf('sdk') !== -1) {
-	alert('Accelerometer does not work on a virtual device');
-} else {
-	Ti.Accelerometer.addEventListener('update', accelerometerCallback);
-	if (Ti.Platform.name === 'android') {
-		Ti.Android.currentActivity.addEventListener('pause', function(e) {
-			Ti.API.info("removing accelerometer callback on pause");
-			Ti.Accelerometer.removeEventListener('update', accelerometerCallback);
-		});
-		Ti.Android.currentActivity.addEventListener('resume', function(e) {
-			Ti.API.info("adding accelerometer callback on resume");
-			Ti.Accelerometer.addEventListener('update', accelerometerCallback);
-		});
-	}
+function accelerate(e) {
+	
 }
-*/
+require(WPATH('accelerometer')).setupCallback(accelerate);
 
 
 function showAR() {

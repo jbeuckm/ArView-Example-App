@@ -16,7 +16,7 @@ The purpose of this "port" is to create an Alloy Widget and keep working on the 
 
 1. Change Google Places API key
 
-   Head over to [Google's API Console](https://code.google.com/apis/console/) and create a new App. Enable the Places API and copy your new API key 
+   Head over to [Google's API Console](https://code.google.com/apis/console/) and create a new App. Enable the Places API and copy your new API key.
 
    In alloy.js, enter your API key for the global variable `Alloy.Globals.googleApiKey`
 
