@@ -24,7 +24,7 @@ The purpose of this "port" is to create an Alloy Widget and keep working on the 
 ```
 
    * `pois' is an array of objects representing places to be tagged in the view.
-   * `overlay' is a view, possibly a title view, etc. that should sit on top of the ArView.
+   * `overlay' is a view, possibly a title view, etc. that will sit on top of the ArView.
    
 ## Example App ##
 
@@ -32,4 +32,4 @@ To run the example app, you need to replace the Google Places API Key with your 
 
 1. Head over to [Google's API Console](https://code.google.com/apis/console/) and create a new App. Enable the Places API and copy your new API key.
 
-2. In alloy.js, enter your API key for the global variable `Alloy.Globals.googleApiKey`
+2. In app/lib/config.js, enter your API key for the variable `exports.googleApiKey`

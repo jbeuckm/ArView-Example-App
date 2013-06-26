@@ -7,6 +7,7 @@ function Controller() {
     var __defers = {};
     Alloy.Collections.instance("GooglePlace");
     $.__views.win = Ti.UI.createWindow({
+        layout: "vertical",
         id: "win"
     });
     $.__views.win && $.addTopLevelView($.__views.win);
@@ -15,12 +16,14 @@ function Controller() {
     });
     $.__views.win.add($.__views.overlay);
     $.__views.arViewButton = Ti.UI.createButton({
+        top: 10,
         id: "arViewButton"
     });
     $.__views.win.add($.__views.arViewButton);
     arViewButtonClick ? $.__views.arViewButton.addEventListener("click", arViewButtonClick) : __defers["$.__views.arViewButton!click!arViewButtonClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
+    arguments[0] || {};
     __defers["$.__views.arViewButton!click!arViewButtonClick"] && $.__views.arViewButton.addEventListener("click", arViewButtonClick);
     _.extend($, exports);
 }

@@ -43,6 +43,7 @@ function Controller() {
     }
     function assignPOIs(_pois) {
         pois = _pois;
+        attachArViewsToPois(pois);
         addViews();
         createRadarBlips();
         deviceLocation && deviceBearing && updateRelativePositions();
@@ -173,6 +174,56 @@ function Controller() {
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return 1e3 * R * c;
     }
+    function attachArViewsToPois(pois) {
+        for (var i = 0; pois.length > i; i++) {
+            var poi = pois[i];
+            var view = Ti.UI.createView({
+                height: "150dp",
+                width: "150dp",
+                backgroundColor: "black",
+                opacity: .6,
+                borderRadius: 5
+            });
+            var label = Ti.UI.createLabel({
+                textAlign: "center",
+                text: poi.title,
+                color: "white",
+                font: {
+                    fontSize: "18dp",
+                    fontWeight: "bold"
+                },
+                height: "42dp",
+                top: "5dp"
+            });
+            view.add(label);
+            if (poi.image) {
+                var image = Ti.UI.createImageView({
+                    width: "130dp",
+                    height: "65dp",
+                    top: "57dp",
+                    image: poi.image
+                });
+                view.add(image);
+            }
+            var rating = Ti.UI.createLabel({
+                textAlign: "center",
+                text: "rating: " + poi.rating,
+                color: "white",
+                font: {
+                    fontSize: "14dp",
+                    fontWeight: "bold"
+                },
+                height: "20dp",
+                bottom: "5dp"
+            });
+            view.add(rating);
+            view.addEventListener("click", function(e) {
+                if (!e.poi) return;
+                alert(e.poi.title + " got a click!");
+            });
+            poi.view = view;
+        }
+    }
     new (require("alloy/widget"))("ArView");
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -180,6 +231,7 @@ function Controller() {
     var $ = this;
     var exports = {};
     $.__views.win = Ti.UI.createWindow({
+        layout: "vertical",
         modal: true,
         navBarHidden: true,
         fullscreen: true,
@@ -188,6 +240,7 @@ function Controller() {
     });
     $.__views.win && $.addTopLevelView($.__views.win);
     $.__views.overlay = Ti.UI.createView({
+        layout: "vertical",
         top: 0,
         left: 0,
         backgroundColor: "transparent",
@@ -195,6 +248,7 @@ function Controller() {
     });
     $.__views.win.add($.__views.overlay);
     $.__views.arContainer = Ti.UI.createView({
+        layout: "vertical",
         top: 0,
         left: 0,
         width: "100%",
@@ -213,6 +267,7 @@ function Controller() {
     });
     $.__views.overlay.add($.__views.closeButton);
     $.__views.radarView = Ti.UI.createView({
+        layout: "vertical",
         backgroundImage: "/images/ArView/radar.png",
         width: "80dp",
         height: "80dp",
@@ -238,7 +293,7 @@ function Controller() {
     $.__views.overlay.add($.__views.headingLabel);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    var params = arguments[0] || {};
+    var args = arguments[0] || {};
     var isAndroid = "android" == Ti.Platform.osname;
     if (isAndroid) {
         var screenWidth = Ti.Platform.displayCaps.platformHeight;
@@ -271,18 +326,18 @@ function Controller() {
     $.arContainer;
     var headingLabel = $.headingLabel;
     var radar = $.radarView;
-    params.overlay && overlay.add(params.overlay);
+    args.overlay && overlay.add(args.overlay);
     var FIELD_OF_VIEW = 30;
     var win = $.win;
     var maxRange = 1e3;
-    params.maxDistance && (maxRange = params.maxDistance);
+    args.maxDistance && (maxRange = args.maxDistance);
     win.addEventListener("open", function() {
         Ti.API.debug("AR Window Open...");
         setTimeout(showAR, 500);
     });
     $.closeButton.addEventListener("click", closeAR);
-    params.initialLocation && (deviceLocation = params.initialLocation);
-    params.pois && assignPOIs(params.pois);
+    args.initialLocation && (deviceLocation = args.initialLocation);
+    args.pois && assignPOIs(args.pois);
     var minPoiDistance, maxPoiDistance;
     var minPoiScale = .3, maxPoiScale = 1;
     var poiScaleRange = maxPoiScale - minPoiScale;

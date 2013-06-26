@@ -1,7 +1,6 @@
 //var Alloy = require('/alloy');
 
 
-
 Ti.API.info(Ti.Platform.model);
 
 var loc;
@@ -31,13 +30,11 @@ try {
 }
 
 
-$.win.open();
-
 
 function arViewButton() {
 	arWin = require('/alloy').createWidget('ArView', null, {
 		pois : pois,
-		overlay : $.overlay,
+		overlay : null,
 		maxDistance : 500, //in m
 		initialLocation: loc
 	}).getView();
@@ -52,10 +49,22 @@ function arViewButton() {
 
 function mapViewButton() {
 	
+	var map = Alloy.createController('mapview', {
+		loc: loc,
+		pois: pois
+	}).getView();
+
+	map.open();
 }
 
 function listViewButton() {
 	
+	var list = Alloy.createController('listview', {
+		loc: loc,
+		pois: pois
+	}).getView();
+
+	list.open();
 }
 
 
@@ -83,14 +92,8 @@ Alloy.Collections.GooglePlace.on('reset', function(e){
 		pois.push(convertGooglePlaceToPoi(places[i]));
 	}
 	
-	$.buttonHolder.visible = false;
+	$.buttonHolder.visible = true;
 	$.activityIndicator.hide();
-
-//	var anns = createMapAnnotationsFromPois(pois);
-	
-//	attachArViewsToPois(pois);
-
-//	showMap(anns);
 
 });
 
@@ -102,11 +105,5 @@ Alloy.Collections.GooglePlace.fetch({
 });
 
 
+$.win.open();
 
-/*
-var mapWin = Alloy.createController('mapview').getView();
-
-var winBase = require('/ui/navWindow').createNavigationWindow(mapWin);
-
-winBase.open();
-*/

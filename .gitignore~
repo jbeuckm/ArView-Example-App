@@ -4,4 +4,3 @@ build
 npm-debug.log
 tmp
 .map
-app/lib/config.js

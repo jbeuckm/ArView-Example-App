@@ -37,7 +37,6 @@ module.exports.sync = function(method, model, options) {
 					sensor: 'true',
 					reference: options.reference
 				};
-				
 				var request = Alloy.Globals.googlePlaceDetailUrl + '?' + require('utilities').serialize(params);
 				xhr.open('GET', request);
 				xhr.send();
@@ -92,6 +91,7 @@ module.exports.sync = function(method, model, options) {
 			
 				var request = Alloy.Globals.googleNearbyPlacesUrl;
 				request += '?' + require('utilities').serialize(params);
+Ti.API.info('GET '+request);
 			
 				xhr.open('GET', request);
 				xhr.send();

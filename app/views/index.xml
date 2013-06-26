@@ -2,20 +2,28 @@
 
 	<Collection src="GooglePlace"/>
 
-    <Window id="win" title="ArView Widget Demo">
-
-		<ActivityIndicator id="activityIndicator">Loading Google Places...</ActivityIndicator>
-
-		<View id="buttonHolder">
-
-			<Button onClick="mapViewButton">Map View</Button>
+	<Window>
+		
+		<NavigationGroup id="nav" platform="ios">
 			
-			<Button onClick="arViewButton">A-R View</Button>
-	
-			<Button onClick="listViewButton">List View</Button>		
+		    <Window id="win" title="ArView Widget Demo">
 		
-		</View>
+				<ActivityIndicator id="activityIndicator">Loading Google Places...</ActivityIndicator>
 		
+				<View id="buttonHolder">
+		
+					<Button onClick="mapViewButton">Map View</Button>
+					
+					<Button onClick="arViewButton">A-R View</Button>
+			
+					<Button onClick="listViewButton">List View</Button>		
+				
+				</View>
+				
+			</Window>
+		
+		</NavigationGroup>		
+
 	</Window>
 	
 </Alloy>

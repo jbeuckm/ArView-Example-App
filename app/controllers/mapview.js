@@ -1,14 +1,7 @@
+var args = arguments[0] || {};
 
-
-
-var isAndroid = Ti.Platform.osname == 'android';
-
-var win = $.win;
-
-win.orientationModes = [Ti.UI.PORTRAIT];
-
-var arWin = null;
-var arWindowOpen = false;
+var pois = args.pois;
+var loc = args.loc;
 
 
 function createMapAnnotationsFromPois(pois) {
@@ -37,13 +30,12 @@ function createMapAnnotationsFromPois(pois) {
 function showMap(annotations) {
 	
 	var map = Ti.Map.createView({
-		top : win.topStart,
 		mapType : Titanium.Map.STANDARD_TYPE,
 		region : {
 			latitude : loc.latitude,
 			longitude : loc.longitude,
-			latitudeDelta : 0.05,
-			longitudeDelta : 0.05
+			latitudeDelta : 0.01,
+			longitudeDelta : 0.01
 		},
 		animate : true,
 		regionFit : true,
@@ -51,14 +43,12 @@ function showMap(annotations) {
 		annotations : annotations
 	});
 
-	win.add(map);
-
+	$.win.add(map);
 }
 
 
-
-
-var pois = [];
+var anns = createMapAnnotationsFromPois(pois);
+showMap(anns);
 
 
 
