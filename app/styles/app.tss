@@ -1,0 +1,12 @@
+Window: {
+	layout: 'vertical'
+}
+
+View: {
+	layout: 'vertical'
+}
+
+Button: {
+	top: 10
+}
+

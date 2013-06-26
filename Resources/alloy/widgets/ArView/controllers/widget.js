@@ -5,7 +5,12 @@ function WPATH(s) {
 }
 
 function Controller() {
-    function accelerate() {}
+    function accelerate(e) {
+        var viewAngle = Math.atan(e.y / e.z);
+        var yOffset = Ti.UI.create2DMatrix();
+        yOffset.translate(0, 100 * viewAngle);
+        $.arContainer.transform = yOffset;
+    }
     function showAR() {
         Ti.Geolocation.addEventListener("heading", headingCallback);
         Ti.Geolocation.addEventListener("location", locationCallback);

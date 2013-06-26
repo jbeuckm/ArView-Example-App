@@ -1,0 +1,2 @@
+//var Alloy = require('/alloy');
+

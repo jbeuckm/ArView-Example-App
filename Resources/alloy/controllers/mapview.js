@@ -81,19 +81,6 @@ function Controller() {
         });
         win.add(map);
     }
-    function arViewButtonClick() {
-        arWin = require("/alloy").createWidget("ArView", null, {
-            pois: pois,
-            overlay: $.overlay,
-            maxDistance: 500,
-            initialLocation: loc
-        }).getView();
-        arWin.addEventListener("close", function() {
-            arWindowOpen = false;
-            arWin = null;
-        });
-        arWin.open();
-    }
     function convertGooglePlaceToPoi(place) {
         return {
             address: place.vicinity,
@@ -110,42 +97,15 @@ function Controller() {
     arguments[0] ? arguments[0]["$model"] : null;
     var $ = this;
     var exports = {};
-    var __defers = {};
+    Alloy.Collections.instance("GooglePlace");
     $.__views.win = Ti.UI.createWindow({
         title: "parmaVision",
         fullScreen: false,
         id: "win"
     });
     $.__views.win && $.addTopLevelView($.__views.win);
-    $.__views.overlay = Ti.UI.createLabel({
-        top: 0,
-        height: "44dp",
-        backgroundColor: "black",
-        color: "white",
-        width: Ti.UI.FILL,
-        text: "parmaVision",
-        opacity: .3,
-        textAlign: "center",
-        font: {
-            fontWeight: "bold",
-            fontSize: "18dp"
-        },
-        id: "overlay"
-    });
-    $.__views.overlay && $.addTopLevelView($.__views.overlay);
-    $.__views.arViewButton = Ti.UI.createButton({
-        title: "AR",
-        width: "60dp",
-        height: "40dp",
-        right: "5dp",
-        top: "2dp",
-        id: "arViewButton"
-    });
-    $.__views.arViewButton && $.addTopLevelView($.__views.arViewButton);
-    arViewButtonClick ? $.__views.arViewButton.addEventListener("click", arViewButtonClick) : __defers["$.__views.arViewButton!click!arViewButtonClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
-    var Alloy = require("/alloy");
     Ti.API.info(Ti.Platform.model);
     var loc;
     loc = "google_sdk" == Titanium.Platform.model || "Simulator" == Titanium.Platform.model ? {
@@ -178,10 +138,7 @@ function Controller() {
         win.add(titleBar);
         win.topStart = titleBar.height;
     } else win.topStart = 0;
-    var arWin = null;
-    var arWindowOpen = false;
     var pois = [];
-    Alloy.Collections.GooglePlace = Alloy.createCollection("GooglePlace");
     Alloy.Collections.GooglePlace.on("reset", function() {
         var places = Alloy.Collections.GooglePlace.toJSON();
         for (i = 0, l = places.length; l > i; i++) pois.push(convertGooglePlaceToPoi(places[i]));
@@ -193,7 +150,6 @@ function Controller() {
     Alloy.Collections.GooglePlace.fetch({
         loc: loc
     });
-    __defers["$.__views.arViewButton!click!arViewButtonClick"] && $.__views.arViewButton.addEventListener("click", arViewButtonClick);
     _.extend($, exports);
 }
 

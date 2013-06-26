@@ -1,5 +1,4 @@
-var params = arguments[0] || {};
-
+var args = arguments[0] || {};
 
 var isAndroid = Ti.Platform.osname == 'android';
 
@@ -43,7 +42,11 @@ if (isAndroid) {
 
 
 function accelerate(e) {
+	var viewAngle = Math.atan(e.y/e.z);
 	
+	var yOffset = Ti.UI.create2DMatrix();
+	yOffset.translate(0, viewAngle*100);
+	$.arContainer.transform = yOffset;
 }
 require(WPATH('accelerometer')).setupCallback(accelerate);
 
@@ -94,8 +97,8 @@ var arContainer = $.arContainer;
 var headingLabel = $.headingLabel;
 var radar = $.radarView;
 
-if (params.overlay) {
-	overlay.add(params.overlay);
+if (args.overlay) {
+	overlay.add(args.overlay);
 }
 
 
@@ -110,8 +113,8 @@ var win = $.win;
 
 var maxRange = 1000;
 
-if (params.maxDistance) {
-	maxRange = params.maxDistance;
+if (args.maxDistance) {
+	maxRange = args.maxDistance;
 }
 
 win.addEventListener('open', function() {
@@ -123,13 +126,15 @@ function doClose() {
 };
 $.closeButton.addEventListener('click', closeAR);
 
-if (params.initialLocation) {
-	deviceLocation = params.initialLocation;
+if (args.initialLocation) {
+	deviceLocation = args.initialLocation;
 }
 
 function assignPOIs(_pois) {
 
 	pois = _pois;
+
+	attachArViewsToPois(pois);
 
 	addViews();
 	createRadarBlips();
@@ -140,8 +145,8 @@ function assignPOIs(_pois) {
 
 }
 
-if (params.pois) {
-	assignPOIs(params.pois);
+if (args.pois) {
+	assignPOIs(args.pois);
 }
 
 function poiClick(e) {
@@ -413,6 +418,70 @@ function calculateDistance(loc1, loc2) {
 	// Distance in m
 	return R * c * 1000;
 };
+
+
+
+	
+function attachArViewsToPois(pois) {
+	
+	var annotations = [];
+
+	for (var i=0; i < pois.length; i++) {
+		
+		var poi = pois[i];
+		
+		// add the view to the parma
+		var view = Ti.UI.createView({
+			height : '150dp',
+			width : '150dp',
+			backgroundColor : 'black',
+			opacity : 0.6,
+			borderRadius : 5
+		});
+		var label = Ti.UI.createLabel({
+			textAlign : 'center',
+			text : poi.title,
+			color : 'white',
+			font : {
+				fontSize : '18dp',
+				fontWeight : 'bold'
+			},
+			height : '42dp',
+			top : '5dp'
+		});
+		view.add(label);
+		if (poi.image) {
+			var image = Ti.UI.createImageView({
+				width : '130dp',
+				height : '65dp',
+				top : '57dp',
+				image : poi.image
+			});
+			view.add(image);
+		}
+		var rating = Ti.UI.createLabel({
+			textAlign : 'center',
+			text : "rating: " + poi.rating,
+			color : 'white',
+			font : {
+				fontSize : '14dp',
+				fontWeight : 'bold'
+			},
+			height : '20dp',
+			bottom : '5dp'
+		});
+		view.add(rating);
+		view.addEventListener('click', function(e) {
+			// Need to do this for Android for the moment
+			// because the click will fire this without a poi
+			if( ! e.poi ){
+				return;
+			}
+			alert(e.poi.title + ' got a click!');
+		});
+		poi.view = view;
+	}
+}
 
 
 exports = {
