@@ -42,27 +42,28 @@ if (isAndroid) {
 }
 
 
-
+/*
 var accelerometerCallback = function(e) {
-  Ti.API.info(e.x+','+e.y+','+e.z);
+	if (Math.random() < .01)
+	Ti.API.info(e.x + ',' + e.y + ',' + e.z);
 };
 
-if (Ti.Platform.model === 'Simulator' || Ti.Platform.model.indexOf('sdk') !== -1 ){
-  alert('Accelerometer does not work on a virtual device');
-} 
-else {
-  Ti.Accelerometer.addEventListener('update', accelerometerCallback);
-  if (Ti.Platform.name === 'android'){
-    Ti.Android.currentActivity.addEventListener('pause', function(e) {
-      Ti.API.info("removing accelerometer callback on pause");
-      Ti.Accelerometer.removeEventListener('update', accelerometerCallback);
-    });
-    Ti.Android.currentActivity.addEventListener('resume', function(e) {
-      Ti.API.info("adding accelerometer callback on resume");
-      Ti.Accelerometer.addEventListener('update', accelerometerCallback);
-    });
-  }
+if (Ti.Platform.model === 'Simulator' || Ti.Platform.model.indexOf('sdk') !== -1) {
+	alert('Accelerometer does not work on a virtual device');
+} else {
+	Ti.Accelerometer.addEventListener('update', accelerometerCallback);
+	if (Ti.Platform.name === 'android') {
+		Ti.Android.currentActivity.addEventListener('pause', function(e) {
+			Ti.API.info("removing accelerometer callback on pause");
+			Ti.Accelerometer.removeEventListener('update', accelerometerCallback);
+		});
+		Ti.Android.currentActivity.addEventListener('resume', function(e) {
+			Ti.API.info("adding accelerometer callback on resume");
+			Ti.Accelerometer.addEventListener('update', accelerometerCallback);
+		});
+	}
 }
+*/
 
 
 function showAR() {
@@ -191,7 +192,7 @@ function locationCallback(e) {
 
 		for (i=0, l=pois.length; i<l; i++) {
 			var poi = pois[i];
-			updateRadarBlipPosition(poi);
+			positionRadarBlip(poi);
 		}
 
 		updatePoiViews();
@@ -272,7 +273,10 @@ function updateRelativePositions() {
 	pois.sort(function(a, b) {
 		return b.distance - a.distance;
 	});
-
+	
+	for (i=0, l=pois.length; i<l; i++) {
+		pois[i].view.zIndex = i;
+	}
 }
 
 var halfScreenWidth = screenWidth / 2;
@@ -367,11 +371,11 @@ function positionRadarBlip(poi) {
 
 	if (!poi.bearing) return;
 	
-	var rad = toRad(poi.bearing);
+	var rad = toRad(poi.bearing + 90);
 
 	var relativeDistance = poi.distance / (maxRange * 1.2);
-	var x = (40 + (relativeDistance * 40 * Math.sin(rad)));
-	var y = (40 - (relativeDistance * 40 * Math.cos(rad)));
+	var x = (40 + (relativeDistance * 40 * Math.cos(rad)));
+	var y = (40 - (relativeDistance * 40 * Math.sin(rad)));
 	
 	poi.blip.left = (x - 1) + "dp";
 	poi.blip.top = (y - 1) + "dp";

@@ -50,7 +50,7 @@ function Controller() {
         updateRelativePositions();
         for (i = 0, l = pois.length; l > i; i++) {
             var poi = pois[i];
-            updateRadarBlipPosition(poi);
+            positionRadarBlip(poi);
         }
         updatePoiViews();
     }
@@ -80,6 +80,7 @@ function Controller() {
         pois.sort(function(a, b) {
             return b.distance - a.distance;
         });
+        for (i = 0, l = pois.length; l > i; i++) pois[i].view.zIndex = i;
     }
     function updatePoiViews() {
         for (i = 0, l = pois.length; l > i; i++) {
@@ -129,10 +130,10 @@ function Controller() {
     }
     function positionRadarBlip(poi) {
         if (!poi.bearing) return;
-        var rad = toRad(poi.bearing);
+        var rad = toRad(poi.bearing + 90);
         var relativeDistance = poi.distance / (1.2 * maxRange);
-        var x = 40 + 40 * relativeDistance * Math.sin(rad);
-        var y = 40 - 40 * relativeDistance * Math.cos(rad);
+        var x = 40 + 40 * relativeDistance * Math.cos(rad);
+        var y = 40 - 40 * relativeDistance * Math.sin(rad);
         poi.blip.left = x - 1 + "dp";
         poi.blip.top = y - 1 + "dp";
     }
