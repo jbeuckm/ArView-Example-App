@@ -42,17 +42,15 @@ if (isAndroid) {
 }
 
 
-/*
+
 var accelerometerCallback = function(e) {
-  labelTimestamp.text = 'timestamp: ' + e.timestamp;
-  labelx.text = 'x: ' + e.x;
-  labely.text = 'y: ' + e.y;
-  labelz.text = 'z: ' + e.z;
+  Ti.API.info(e.x+','+e.y+','+e.z);
 };
 
 if (Ti.Platform.model === 'Simulator' || Ti.Platform.model.indexOf('sdk') !== -1 ){
   alert('Accelerometer does not work on a virtual device');
-} else {
+} 
+else {
   Ti.Accelerometer.addEventListener('update', accelerometerCallback);
   if (Ti.Platform.name === 'android'){
     Ti.Android.currentActivity.addEventListener('pause', function(e) {
@@ -65,7 +63,7 @@ if (Ti.Platform.model === 'Simulator' || Ti.Platform.model.indexOf('sdk') !== -1
     });
   }
 }
-*/
+
 
 function showAR() {
 	Ti.Geolocation.addEventListener('heading', headingCallback);
