@@ -2,11 +2,14 @@
 
 	<Collection src="GooglePlace"/>
 
-	<Window id="win">
+	<Window id="win" title="List View">
 		
-		<Label id="overlay"/>
-		<Button id="arViewButton" onClick="arViewButtonClick"/>
-
+		<TableView dataCollection="GooglePlace">
+		
+			<TableViewRow title="{title}"/>
+				
+		</TableView>
+		
 	</Window>
 	
 	

@@ -38,9 +38,8 @@ function Controller() {
     Alloy.Collections.instance("GooglePlace");
     $.__views.win = Ti.UI.createWindow({
         layout: "vertical",
-        title: "parmaVision",
-        fullScreen: false,
-        id: "win"
+        id: "win",
+        title: "Map View"
     });
     $.__views.win && $.addTopLevelView($.__views.win);
     exports.destroy = function() {};

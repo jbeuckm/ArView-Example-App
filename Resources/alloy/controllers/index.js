@@ -17,14 +17,18 @@ function Controller() {
             loc: loc,
             pois: pois
         }).getView();
-        map.open();
+        $.nav.open(map, {
+            animated: true
+        });
     }
     function listViewButton() {
         var list = Alloy.createController("listview", {
             loc: loc,
             pois: pois
         }).getView();
-        list.open();
+        $.nav.open(list, {
+            animated: true
+        });
     }
     function convertGooglePlaceToPoi(place) {
         return {
@@ -44,25 +48,25 @@ function Controller() {
     var exports = {};
     var __defers = {};
     Alloy.Collections.instance("GooglePlace");
-    $.__views.index = Ti.UI.createWindow({
-        layout: "vertical",
-        id: "index"
-    });
-    $.__views.index && $.addTopLevelView($.__views.index);
     $.__views.win = Ti.UI.createWindow({
         layout: "vertical",
-        id: "win",
-        title: "ArView Widget Demo"
+        id: "win"
+    });
+    $.__views.win && $.addTopLevelView($.__views.win);
+    $.__views.__alloyId3 = Ti.UI.createWindow({
+        layout: "vertical",
+        title: "ArView Demo",
+        id: "__alloyId3"
     });
     $.__views.activityIndicator = Ti.UI.createActivityIndicator({
         id: "activityIndicator"
     });
-    $.__views.win.add($.__views.activityIndicator);
+    $.__views.__alloyId3.add($.__views.activityIndicator);
     $.__views.buttonHolder = Ti.UI.createView({
         layout: "vertical",
         id: "buttonHolder"
     });
-    $.__views.win.add($.__views.buttonHolder);
+    $.__views.__alloyId3.add($.__views.buttonHolder);
     $.__views.__alloyId4 = Ti.UI.createButton({
         top: 10,
         title: "Map View",
@@ -85,13 +89,13 @@ function Controller() {
     $.__views.buttonHolder.add($.__views.__alloyId6);
     listViewButton ? $.__views.__alloyId6.addEventListener("click", listViewButton) : __defers["$.__views.__alloyId6!click!listViewButton"] = true;
     $.__views.nav = Ti.UI.iPhone.createNavigationGroup({
-        window: $.__views.win,
+        window: $.__views.__alloyId3,
         id: "nav"
     });
-    $.__views.index.add($.__views.nav);
+    $.__views.win.add($.__views.nav);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    Ti.API.info(Ti.Platform.model);
+    var pois = [];
     var loc;
     loc = "google_sdk" == Titanium.Platform.model || "Simulator" == Titanium.Platform.model ? {
         latitude: 37.78583526611328,
@@ -110,7 +114,6 @@ function Controller() {
     } catch (e) {
         Ti.API.info("Running stand-alone");
     }
-    var pois = [];
     Alloy.Collections.GooglePlace.on("reset", function() {
         var places = Alloy.Collections.GooglePlace.toJSON();
         for (i = 0, l = places.length; l > i; i++) pois.push(convertGooglePlaceToPoi(places[i]));

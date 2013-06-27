@@ -2,7 +2,11 @@ Window: {
 	modal : true,
 	navBarHidden : true,
 	fullscreen : true,
-	orientationModes : [Ti.UI.PORTRAIT]
+	orientationModes : [Ti.UI.PORTRAIT],
+	layout: null
+}
+View: {
+	layout: null
 }
 
 '#arContainer': {

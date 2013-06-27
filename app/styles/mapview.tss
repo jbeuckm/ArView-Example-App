@@ -1,7 +1,3 @@
-Window: {
-	title : 'parmaVision',
-	fullScreen : false
-}
 
 
 "#overlay":{

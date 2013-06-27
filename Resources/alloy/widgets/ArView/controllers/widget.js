@@ -231,7 +231,7 @@ function Controller() {
     var $ = this;
     var exports = {};
     $.__views.win = Ti.UI.createWindow({
-        layout: "vertical",
+        layout: null,
         modal: true,
         navBarHidden: true,
         fullscreen: true,
@@ -240,7 +240,7 @@ function Controller() {
     });
     $.__views.win && $.addTopLevelView($.__views.win);
     $.__views.overlay = Ti.UI.createView({
-        layout: "vertical",
+        layout: null,
         top: 0,
         left: 0,
         backgroundColor: "transparent",
@@ -248,7 +248,7 @@ function Controller() {
     });
     $.__views.win.add($.__views.overlay);
     $.__views.arContainer = Ti.UI.createView({
-        layout: "vertical",
+        layout: null,
         top: 0,
         left: 0,
         width: "100%",
@@ -267,7 +267,7 @@ function Controller() {
     });
     $.__views.overlay.add($.__views.closeButton);
     $.__views.radarView = Ti.UI.createView({
-        layout: "vertical",
+        layout: null,
         backgroundImage: "/images/ArView/radar.png",
         width: "80dp",
         height: "80dp",

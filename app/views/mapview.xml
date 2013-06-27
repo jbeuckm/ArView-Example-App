@@ -2,7 +2,7 @@
 
 	<Collection src="GooglePlace"/>
 
-	<Window id="win">
+	<Window id="win" title="Map View">
 		
 	</Window>
 	

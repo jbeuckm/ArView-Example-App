@@ -2,11 +2,11 @@
 
 	<Collection src="GooglePlace"/>
 
-	<Window>
+	<Window id="win">
 		
 		<NavigationGroup id="nav" platform="ios">
 			
-		    <Window id="win" title="ArView Widget Demo">
+		    <Window title="ArView Demo">
 		
 				<ActivityIndicator id="activityIndicator">Loading Google Places...</ActivityIndicator>
 		

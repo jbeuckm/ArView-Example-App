@@ -1,7 +1,6 @@
 //var Alloy = require('/alloy');
 
-
-Ti.API.info(Ti.Platform.model);
+var pois = [];
 
 var loc;
 if (Titanium.Platform.model == 'google_sdk' || Titanium.Platform.model == 'Simulator') { 
@@ -54,7 +53,7 @@ function mapViewButton() {
 		pois: pois
 	}).getView();
 
-	map.open();
+	$.nav.open(map, {animated:true});
 }
 
 function listViewButton() {
@@ -64,7 +63,7 @@ function listViewButton() {
 		pois: pois
 	}).getView();
 
-	list.open();
+	$.nav.open(list, {animated:true});
 }
 
 
@@ -82,7 +81,6 @@ function convertGooglePlaceToPoi(place) {
 
 //Alloy.Collections.GooglePlace = Alloy.createCollection('GooglePlace');
 
-var pois = [];
 
 Alloy.Collections.GooglePlace.on('reset', function(e){ 
 	
@@ -104,6 +102,4 @@ Alloy.Collections.GooglePlace.fetch({
 	loc: loc
 });
 
-
 $.win.open();
-
