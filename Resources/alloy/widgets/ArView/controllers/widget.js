@@ -140,7 +140,6 @@ function Controller() {
         }
     }
     function positionRadarBlip(poi) {
-        if (!poi.bearing) return;
         var rad = toRad(poi.bearing + 90);
         var relativeDistance = poi.distance / (1.2 * maxRange);
         var x = 40 + 40 * relativeDistance * Math.cos(rad);

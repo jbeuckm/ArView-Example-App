@@ -356,8 +356,6 @@ function createRadarBlips() {
 
 function positionRadarBlip(poi) {
 
-	if (!poi.bearing) return;
-	
 	var rad = toRad(poi.bearing + 90);
 
 	var relativeDistance = poi.distance / (maxRange * 1.2);
@@ -366,8 +364,6 @@ function positionRadarBlip(poi) {
 	
 	poi.blip.left = (x - 1) + "dp";
 	poi.blip.top = (y - 1) + "dp";
-	
-//Ti.API.info('blip position: '+poi.blip.top+', '+poi.blip.left);	
 }
 
 
@@ -386,6 +382,9 @@ function projectBearingIntoScene(poiBearing) {
 }
 
 
+/**
+ * Finds the separation between angles theta1 and theta2 (in degrees)
+ */
 function findAngularDistance(theta1, theta2) {
 	var a = theta1 - theta2;
 	if (a > 180) a -= 360;
@@ -430,7 +429,6 @@ function calculateDistance(loc1, loc2) {
 
 
 
-	
 function attachArViewsToPois(pois) {
 	
 	for (var i=0; i < pois.length; i++) {
@@ -444,55 +442,6 @@ function attachArViewsToPois(pois) {
 			rating: "rating: " + poi.rating
 		}).getView();
 
-/*		
-		// add the view to the parma
-		var view = Ti.UI.createView({
-			height : '150dp',
-			width : '150dp',
-			backgroundColor : 'black',
-			opacity : 0.6,
-			borderRadius : 5
-		});
-		
-		
-		var label = Ti.UI.createLabel({
-			textAlign : 'center',
-			text : poi.title,
-			color : 'white',
-			font : {
-				fontSize : '18dp',
-				fontWeight : 'bold'
-			},
-			height : '42dp',
-			top : '5dp'
-		});
-		view.add(label);
-		
-		
-		if (poi.image) {
-			var image = Ti.UI.createImageView({
-				width : '130dp',
-				height : '65dp',
-				top : '57dp',
-				image : poi.image
-			});
-			view.add(image);
-		}
-		
-		
-		var rating = Ti.UI.createLabel({
-			textAlign : 'center',
-			text : "rating: " + poi.rating,
-			color : 'white',
-			font : {
-				fontSize : '14dp',
-				fontWeight : 'bold'
-			},
-			height : '20dp',
-			bottom : '5dp'
-		});
-		view.add(rating);
-*/
 		poi.view = view;
 	}
 }
