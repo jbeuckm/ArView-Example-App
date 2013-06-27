@@ -55,7 +55,9 @@ function accelerate(e) {
 	
 	updatePoiViews();
 }
-require(WPATH('accelerometer')).setupCallback(accelerate);
+var acc = require(WPATH('accelerometer'));
+acc.setupCallback(accelerate);
+acc.start();
 
 
 function showAR() {
@@ -82,13 +84,14 @@ function showAR() {
 }
 
 function closeAR() {
+	acc.destroy();
 	Ti.Geolocation.removeEventListener('heading', headingCallback);
 	Ti.Geolocation.removeEventListener('location', locationCallback);
 	if (!isAndroid) {
 		Ti.Media.hideCamera();
 	}
 	setTimeout(function() {
-		win.close();
+		$.win.close();
 	}, 500);
 }
 
@@ -112,18 +115,13 @@ if (args.overlay) {
 // iPhone camera sees about 30 degrees left to right
 var FIELD_OF_VIEW = 30;
 
-
-
-
-var win = $.win;
-
 var maxRange = 1000;
 
 if (args.maxDistance) {
 	maxRange = args.maxDistance;
 }
 
-win.addEventListener('open', function() {
+$.win.addEventListener('open', function() {
 	Ti.API.debug('AR Window Open...');
 	setTimeout(showAR, 500);
 });

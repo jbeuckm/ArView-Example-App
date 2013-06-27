@@ -12,26 +12,36 @@ var accelerometerCallback = function(e) {
 };
 
 
-if (Ti.Accelerometer === undefined) {
-	Ti.API.error('Accelerometer NOT available in this environment.');
-}
-else {
+exports.start = function() {
 	
 	if (Ti.Platform.model === 'Simulator' || Ti.Platform.model.indexOf('sdk') !== -1) {
 		alert('Accelerometer does not work on a virtual device');
 	} else {
 		Ti.Accelerometer.addEventListener('update', accelerometerCallback);
 		if (Ti.Platform.name === 'android') {
-			Ti.Android.currentActivity.addEventListener('pause', function(e) {
-				Ti.API.info("removing accelerometer callback on pause");
-				Ti.Accelerometer.removeEventListener('update', accelerometerCallback);
-			});
-			Ti.Android.currentActivity.addEventListener('resume', function(e) {
-				Ti.API.info("adding accelerometer callback on resume");
-				Ti.Accelerometer.addEventListener('update', accelerometerCallback);
-			});
+			Ti.Android.currentActivity.addEventListener('pause', androidPause);
+			Ti.Android.currentActivity.addEventListener('resume', androidResume);
 		}
 	}
+}
+
+function androidPause(e) {
+	Ti.API.info("removing accelerometer callback on pause");
+	Ti.Accelerometer.removeEventListener('update', accelerometerCallback);
+}
+function androidResume(e) {
+	Ti.API.info("adding accelerometer callback on resume");
+	Ti.Accelerometer.addEventListener('update', accelerometerCallback);
+}
+
+
+exports.destroy = function() {
+	Ti.Accelerometer.removeEventListener('update', accelerometerCallback);
+	if (Ti.Platform.name === 'android') {
+		Ti.Android.currentActivity.removeEventListener('pause', androidPause);
+		Ti.Android.currentActivity.removeEventListener('resume', androidResume);
+	}
+	callback = null;
 }
 
 

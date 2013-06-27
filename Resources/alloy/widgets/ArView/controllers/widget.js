@@ -30,11 +30,12 @@ function Controller() {
         });
     }
     function closeAR() {
+        acc.destroy();
         Ti.Geolocation.removeEventListener("heading", headingCallback);
         Ti.Geolocation.removeEventListener("location", locationCallback);
         isAndroid || Ti.Media.hideCamera();
         setTimeout(function() {
-            win.close();
+            $.win.close();
         }, 500);
     }
     function doClose() {
@@ -323,11 +324,13 @@ function Controller() {
         Ti.Geolocation.purpose = "Augmented Reality";
     }
     var yOffset = 0;
-    var stability = .9;
+    var stability = .6;
     var volatility = 1 - stability;
     var PI_2 = Math.PI / 2;
     var viewAngle;
-    require(WPATH("accelerometer")).setupCallback(accelerate);
+    var acc = require(WPATH("accelerometer"));
+    acc.setupCallback(accelerate);
+    acc.start();
     var deviceLocation = null;
     var deviceBearing = 1;
     $.arContainer;
@@ -335,10 +338,9 @@ function Controller() {
     var radar = $.radarView;
     args.overlay && overlay.add(args.overlay);
     var FIELD_OF_VIEW = 30;
-    var win = $.win;
     var maxRange = 1e3;
     args.maxDistance && (maxRange = args.maxDistance);
-    win.addEventListener("open", function() {
+    $.win.addEventListener("open", function() {
         Ti.API.debug("AR Window Open...");
         setTimeout(showAR, 500);
     });
