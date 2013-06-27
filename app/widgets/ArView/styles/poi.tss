@@ -1,0 +1,40 @@
+
+'#poiView': {
+	height : '150dp',
+	width : '150dp',
+	backgroundColor : 'black',
+	opacity : 0.6,
+	borderRadius : 5,
+	layout: null
+}
+
+'#poiImage': {
+	width : '130dp',
+	height : '65dp',
+	top : '57dp'
+//	image : poi.image
+}
+
+'#titleLabel': {
+	textAlign : 'center',
+//	text : poi.title,
+	color : 'white',
+	font : {
+		fontSize : '18dp',
+		fontWeight : 'bold'
+	},
+	height : '42dp',
+	top : '5dp'
+}
+
+'#ratingLabel': {
+	textAlign : 'center',
+//	text : "rating: " + poi.rating,
+	color : 'white',
+	font : {
+		fontSize : '14dp',
+		fontWeight : 'bold'
+	},
+	height : '20dp',
+	bottom : '5dp'
+}

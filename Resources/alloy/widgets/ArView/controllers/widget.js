@@ -19,7 +19,7 @@ function Controller() {
                 closeAR();
             },
             error: function() {
-                alert("unable to open AR Window");
+                alert("unable to open camera view");
             },
             mediaTypes: [ Ti.Media.MEDIA_TYPE_VIDEO, Ti.Media.MEDIA_TYPE_PHOTO ],
             showControls: false,
@@ -47,6 +47,9 @@ function Controller() {
         addViews();
         createRadarBlips();
         deviceLocation && deviceBearing && updateRelativePositions();
+    }
+    function poiClick(e) {
+        Ti.API.info(e.source);
     }
     function locationCallback(e) {
         deviceLocation = e.coords;
@@ -115,9 +118,10 @@ function Controller() {
         for (i = 0, l = pois.length; l > i; i++) {
             var poi = pois[i];
             if (poi.view) {
-                $.arContainer.add(poi.view);
+                poi.view.addEventListener("click", poiClick);
                 poi.view.visible = false;
                 poi.inRange = true;
+                $.arContainer.add(poi.view);
             }
         }
     }
@@ -177,50 +181,12 @@ function Controller() {
     function attachArViewsToPois(pois) {
         for (var i = 0; pois.length > i; i++) {
             var poi = pois[i];
-            var view = Ti.UI.createView({
-                height: "150dp",
-                width: "150dp",
-                backgroundColor: "black",
-                opacity: .6,
-                borderRadius: 5
-            });
-            var label = Ti.UI.createLabel({
-                textAlign: "center",
-                text: poi.title,
-                color: "white",
-                font: {
-                    fontSize: "18dp",
-                    fontWeight: "bold"
-                },
-                height: "42dp",
-                top: "5dp"
-            });
-            view.add(label);
-            if (poi.image) {
-                var image = Ti.UI.createImageView({
-                    width: "130dp",
-                    height: "65dp",
-                    top: "57dp",
-                    image: poi.image
-                });
-                view.add(image);
-            }
-            var rating = Ti.UI.createLabel({
-                textAlign: "center",
-                text: "rating: " + poi.rating,
-                color: "white",
-                font: {
-                    fontSize: "14dp",
-                    fontWeight: "bold"
-                },
-                height: "20dp",
-                bottom: "5dp"
-            });
-            view.add(rating);
-            view.addEventListener("click", function(e) {
-                if (!e.poi) return;
-                alert(e.poi.title + " got a click!");
-            });
+            var view = require("/alloy").createWidget("ArView", "poi", {
+                id: poi.id,
+                title: poi.title,
+                image: poi.image,
+                rating: "rating: " + poi.rating
+            }).getView();
             poi.view = view;
         }
     }

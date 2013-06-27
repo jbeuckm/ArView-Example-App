@@ -71,7 +71,7 @@ function showAR() {
 			closeAR();
 		},
 		error : function(error) {
-			alert('unable to open AR Window');
+			alert('unable to open camera view');
 //			closeAR();
 		},
 		mediaTypes : [Ti.Media.MEDIA_TYPE_VIDEO, Ti.Media.MEDIA_TYPE_PHOTO],
@@ -154,14 +154,7 @@ if (args.pois) {
 }
 
 function poiClick(e) {
-	Ti.API.debug('heard a click');
-	Ti.API.debug('number=' + e.source.number);
-	var poi = inRangePois[e.source.number];
-	var view = poi.view;
-	view.fireEvent('click', {
-		source : poi.view,
-		poi : poi
-	});
+	Ti.API.info(e.source);
 }
 
 
@@ -326,9 +319,13 @@ function addViews() {
 	for (i=0, l=pois.length; i<l; i++) {
 		var poi = pois[i];
 		if (poi.view) {
-			$.arContainer.add(poi.view);
+
+			poi.view.addEventListener('click', poiClick);
+
 			poi.view.visible = false;
 			poi.inRange = true;
+			
+			$.arContainer.add(poi.view);
 		}
 	}
 }
@@ -400,6 +397,11 @@ function toRad(val) {
 	return val * Math.PI / 180;
 };
 
+/**
+ * Which direction to get from point1 to point2?
+ * @param {Object} point1
+ * @param {Object} point2
+ */
 function calculateBearing(point1, point2) {
 	var lat1 = toRad(point1.latitude);
 	var lat2 = toRad(point2.latitude);
@@ -410,9 +412,13 @@ function calculateBearing(point1, point2) {
 	return ((brng * (180 / Math.PI)) + 360) % 360;
 };
 
+/**
+ * Find geo-distance betwixt two locations on earth's surface
+ * @param {Object} loc1
+ * @param {Object} loc2
+ */
 function calculateDistance(loc1, loc2) {
-	var R = 6371;
-	// Radius of the earth in km
+	var R = 6371;	// Radius of the earth in km
 	var dLat = (toRad(loc2.latitude - loc1.latitude));
 	// Javascript functions in radians
 	var dLon = (toRad(loc2.longitude - loc1.longitude));
@@ -427,12 +433,18 @@ function calculateDistance(loc1, loc2) {
 	
 function attachArViewsToPois(pois) {
 	
-	var annotations = [];
-
 	for (var i=0; i < pois.length; i++) {
 		
 		var poi = pois[i];
 		
+		var view = require('/alloy').createWidget('ArView', 'poi', {
+			id: poi.id,
+			title: poi.title,
+			image: poi.image,
+			rating: "rating: " + poi.rating
+		}).getView();
+
+/*		
 		// add the view to the parma
 		var view = Ti.UI.createView({
 			height : '150dp',
@@ -441,6 +453,8 @@ function attachArViewsToPois(pois) {
 			opacity : 0.6,
 			borderRadius : 5
 		});
+		
+		
 		var label = Ti.UI.createLabel({
 			textAlign : 'center',
 			text : poi.title,
@@ -453,6 +467,8 @@ function attachArViewsToPois(pois) {
 			top : '5dp'
 		});
 		view.add(label);
+		
+		
 		if (poi.image) {
 			var image = Ti.UI.createImageView({
 				width : '130dp',
@@ -462,6 +478,8 @@ function attachArViewsToPois(pois) {
 			});
 			view.add(image);
 		}
+		
+		
 		var rating = Ti.UI.createLabel({
 			textAlign : 'center',
 			text : "rating: " + poi.rating,
@@ -474,14 +492,7 @@ function attachArViewsToPois(pois) {
 			bottom : '5dp'
 		});
 		view.add(rating);
-		view.addEventListener('click', function(e) {
-			// Need to do this for Android for the moment
-			// because the click will fire this without a poi
-			if( ! e.poi ){
-				return;
-			}
-			alert(e.poi.title + ' got a click!');
-		});
+*/
 		poi.view = view;
 	}
 }

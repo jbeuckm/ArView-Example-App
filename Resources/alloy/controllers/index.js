@@ -1,6 +1,6 @@
 function Controller() {
     function arViewButton() {
-        arWin = require("/alloy").createWidget("ArView", null, {
+        var arWin = require("/alloy").createWidget("ArView", null, {
             pois: pois,
             overlay: null,
             maxDistance: 500,
@@ -61,6 +61,7 @@ function Controller() {
         id: "__alloyId3"
     });
     $.__views.activityIndicator = Ti.UI.createActivityIndicator({
+        top: 50,
         id: "activityIndicator",
         message: "Loading Google Places..."
     });

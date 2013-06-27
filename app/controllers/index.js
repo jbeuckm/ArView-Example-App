@@ -33,7 +33,7 @@ else {
 
 
 function arViewButton() {
-	arWin = require('/alloy').createWidget('ArView', null, {
+	var arWin = require('/alloy').createWidget('ArView', null, {
 		pois : pois,
 		overlay : null,
 		maxDistance : 500, //in m

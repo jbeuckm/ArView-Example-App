@@ -1,0 +1,25 @@
+'.icon': {
+	left: 0,
+	height: 40
+}
+
+'.nameLabel': {
+	top: 5,
+	left: 65,
+	font: {
+		fontSize: 20
+	},
+	wordWrap: false
+}
+
+TableViewRow: {
+	height: 50
+}
+
+'.vicinityLabel': {
+	bottom: 5,
+	left: 65,
+	font: {
+		fontSize: 10
+	}
+}

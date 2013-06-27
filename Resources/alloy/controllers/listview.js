@@ -42,10 +42,9 @@ function Controller() {
     }
     function tableClick(e) {
         alert(e.row.modelId);
-        var model = Alloy.Collections.GooglePlace.where({
+        Alloy.Collections.GooglePlace.where({
             id: e.row.modelId
         });
-        Ti.API.info(model);
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
