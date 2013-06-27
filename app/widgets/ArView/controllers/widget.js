@@ -11,6 +11,9 @@ if (isAndroid) {
 	var screenHeight = Ti.Platform.displayCaps.platformHeight;
 }
 
+var halfScreenHeight = screenHeight / 2;
+var halfScreenWidth = screenWidth / 2;
+
 var overlay = $.overlay;
 overlay.height = screenHeight;
 overlay.width = screenWidth;
@@ -45,7 +48,8 @@ var yOffset = Math.PI/2;
 function accelerate(e) {
 	var viewAngle = Math.atan2(e.y, e.z);
 	yOffset = screenHeight/2 * (viewAngle + Math.PI/2);
-Ti.API.info('yOffset = '+yOffset);	
+	
+	updatePoiViews();
 }
 require(WPATH('accelerometer')).setupCallback(accelerate);
 
@@ -90,7 +94,6 @@ function closeAR() {
 var deviceLocation = null;
 var deviceBearing = 1;
 
-var centerY = screenHeight / 2;
 
 var arContainer = $.arContainer;
 var headingLabel = $.headingLabel;
@@ -265,7 +268,6 @@ function updateRelativePositions() {
 	}
 }
 
-var halfScreenWidth = screenWidth / 2;
 var limitLeft = -halfScreenWidth - 100;
 var limitRight = +halfScreenWidth + 100;
 
