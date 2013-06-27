@@ -97,15 +97,6 @@ function Controller() {
     $.__views.win.add($.__views.nav);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    var pois = [];
-    var loc;
-    loc = "google_sdk" == Titanium.Platform.model || "Simulator" == Titanium.Platform.model ? {
-        latitude: 37.78583526611328,
-        longitude: -122.40641784667969
-    } : {
-        latitude: 44.977329,
-        longitude: -93.267714
-    };
     try {
         exports.close = function() {
             winBase.close();
@@ -116,6 +107,15 @@ function Controller() {
     } catch (e) {
         Ti.API.info("Running stand-alone");
     }
+    var pois = [];
+    var loc;
+    loc = "google_sdk" == Titanium.Platform.model || "Simulator" == Titanium.Platform.model ? {
+        latitude: 37.78583526611328,
+        longitude: -122.40641784667969
+    } : {
+        latitude: 44.977329,
+        longitude: -93.267714
+    };
     Alloy.Collections.GooglePlace.on("reset", function() {
         var places = Alloy.Collections.GooglePlace.toJSON();
         for (i = 0, l = places.length; l > i; i++) pois.push(convertGooglePlaceToPoi(places[i]));

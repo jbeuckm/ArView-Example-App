@@ -6,9 +6,9 @@ function WPATH(s) {
 
 function Controller() {
     function accelerate(e) {
-        var viewAngle = Math.atan2(e.y, e.z);
-        yOffset = screenHeight / 2 * (viewAngle + Math.PI / 2);
-        Ti.API.info("yOffset = " + yOffset);
+        viewAngle = Math.atan2(e.y, e.z);
+        yOffset = stability * yOffset + volatility * halfScreenHeight * (viewAngle + PI_2);
+        updatePoiViews();
     }
     function showAR() {
         Ti.Geolocation.addEventListener("heading", headingCallback);
@@ -302,6 +302,8 @@ function Controller() {
         var screenWidth = Ti.Platform.displayCaps.platformWidth;
         var screenHeight = Ti.Platform.displayCaps.platformHeight;
     }
+    var halfScreenHeight = screenHeight / 2;
+    var halfScreenWidth = screenWidth / 2;
     var overlay = $.overlay;
     overlay.height = screenHeight;
     overlay.width = screenWidth;
@@ -320,7 +322,11 @@ function Controller() {
         Ti.Geolocation.accuracy = Ti.Geolocation.ACCURACY_NEAREST_TEN_METERS;
         Ti.Geolocation.purpose = "Augmented Reality";
     }
-    var yOffset = Math.PI / 2;
+    var yOffset = 0;
+    var stability = .9;
+    var volatility = 1 - stability;
+    var PI_2 = Math.PI / 2;
+    var viewAngle;
     require(WPATH("accelerometer")).setupCallback(accelerate);
     var deviceLocation = null;
     var deviceBearing = 1;
@@ -342,7 +348,6 @@ function Controller() {
     var minPoiDistance, maxPoiDistance;
     var minPoiScale = .3, maxPoiScale = 1;
     var poiScaleRange = maxPoiScale - minPoiScale;
-    var halfScreenWidth = screenWidth / 2;
     var limitLeft = -halfScreenWidth - 100;
     var limitRight = +halfScreenWidth + 100;
     var lowY = .8 * (screenHeight / 2);

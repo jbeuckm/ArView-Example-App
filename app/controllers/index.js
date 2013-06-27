@@ -1,5 +1,18 @@
 //var Alloy = require('/alloy');
 
+try {
+	exports.close = function() {
+		winBase.close();
+		mapWin = null;
+		winBase = null;
+	};
+	Ti.API.info("Running in TiShadow");
+} catch (e) {
+	Ti.API.info("Running stand-alone");
+}
+
+
+
 var pois = [];
 
 var loc;
@@ -16,17 +29,6 @@ else {
 	}
 }
 
-
-try {
-	exports.close = function() {
-		winBase.close();
-		mapWin = null;
-		winBase = null;
-	};
-	Ti.API.info("Running in TiShadow");
-} catch (e) {
-	Ti.API.info("Running stand-alone");
-}
 
 
 

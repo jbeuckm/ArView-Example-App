@@ -43,11 +43,15 @@ if (isAndroid) {
 	Ti.Geolocation.purpose = "Augmented Reality";
 }
 
-var yOffset = Math.PI/2;
+var yOffset = 0;
+var stability = .6;
+var volatility = 1 - stability;
+var PI_2 = Math.PI/2;
+var viewAngle; // from 0 (looking straight up) to PI (looking straight down)
 
 function accelerate(e) {
-	var viewAngle = Math.atan2(e.y, e.z);
-	yOffset = screenHeight/2 * (viewAngle + Math.PI/2);
+	viewAngle = Math.atan2(e.y, e.z);
+	yOffset = stability * yOffset + volatility * (halfScreenHeight * (viewAngle + PI_2));
 	
 	updatePoiViews();
 }
