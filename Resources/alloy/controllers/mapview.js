@@ -38,6 +38,7 @@ function Controller() {
     Alloy.Collections.instance("GooglePlace");
     $.__views.win = Ti.UI.createWindow({
         layout: "vertical",
+        backgroundColor: "#666",
         id: "win",
         title: "Map View"
     });

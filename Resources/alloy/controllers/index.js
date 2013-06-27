@@ -50,11 +50,13 @@ function Controller() {
     Alloy.Collections.instance("GooglePlace");
     $.__views.win = Ti.UI.createWindow({
         layout: "vertical",
+        backgroundColor: "#666",
         id: "win"
     });
     $.__views.win && $.addTopLevelView($.__views.win);
     $.__views.__alloyId3 = Ti.UI.createWindow({
         layout: "vertical",
+        backgroundColor: "#666",
         title: "ArView Demo",
         id: "__alloyId3"
     });

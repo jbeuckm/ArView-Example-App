@@ -6,10 +6,9 @@ function WPATH(s) {
 
 function Controller() {
     function accelerate(e) {
-        var viewAngle = Math.atan(e.y / e.z);
-        var yOffset = Ti.UI.create2DMatrix();
-        yOffset.translate(0, 100 * viewAngle);
-        $.arContainer.transform = yOffset;
+        var viewAngle = Math.atan2(e.y, e.z);
+        yOffset = screenHeight / 2 * (viewAngle + Math.PI / 2);
+        Ti.API.info("yOffset = " + yOffset);
     }
     function showAR() {
         Ti.Geolocation.addEventListener("heading", headingCallback);
@@ -99,7 +98,7 @@ function Controller() {
                     poi.view.visible = true;
                     var transform = Ti.UI.create2DMatrix();
                     var distanceRank = (poi.distance - minPoiDistance) / poiDistanceRange;
-                    var y = lowY + distanceRank * yRange;
+                    var y = lowY + distanceRank * yRange + yOffset;
                     transform = transform.translate(horizontalPositionInScene, y);
                     var scale = maxPoiScale - distanceRank * poiScaleRange;
                     transform = transform.scale(scale);
@@ -232,6 +231,7 @@ function Controller() {
     var exports = {};
     $.__views.win = Ti.UI.createWindow({
         layout: null,
+        backgroundColor: "#666",
         modal: true,
         navBarHidden: true,
         fullscreen: true,
@@ -320,6 +320,7 @@ function Controller() {
         Ti.Geolocation.accuracy = Ti.Geolocation.ACCURACY_NEAREST_TEN_METERS;
         Ti.Geolocation.purpose = "Augmented Reality";
     }
+    var yOffset = Math.PI / 2;
     require(WPATH("accelerometer")).setupCallback(accelerate);
     var deviceLocation = null;
     var deviceBearing = 1;

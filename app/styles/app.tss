@@ -1,5 +1,6 @@
 Window: {
-	layout: 'vertical'
+	layout: 'vertical',
+	backgroundColor: '#666'
 }
 
 View: {

@@ -40,13 +40,12 @@ if (isAndroid) {
 	Ti.Geolocation.purpose = "Augmented Reality";
 }
 
+var yOffset = Math.PI/2;
 
 function accelerate(e) {
-	var viewAngle = Math.atan(e.y/e.z);
-	
-	var yOffset = Ti.UI.create2DMatrix();
-	yOffset.translate(0, viewAngle*100);
-	$.arContainer.transform = yOffset;
+	var viewAngle = Math.atan2(e.y, e.z);
+	yOffset = screenHeight/2 * (viewAngle + Math.PI/2);
+Ti.API.info('yOffset = '+yOffset);	
 }
 require(WPATH('accelerometer')).setupCallback(accelerate);
 
@@ -295,7 +294,7 @@ function updatePoiViews() {
 
 				var distanceRank = (poi.distance - minPoiDistance) / poiDistanceRange;
 
-				var y = lowY + distanceRank * yRange;
+				var y = lowY + distanceRank * yRange + yOffset;
 				// this translation is from the center of the screen
 				transform = transform.translate(horizontalPositionInScene, y);
 
