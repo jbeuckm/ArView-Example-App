@@ -6,7 +6,7 @@
 		
 		<TableView dataCollection="GooglePlace" onClick="tableClick">
 		
-			<TableViewRow hasDetail="true" model="{id}">
+			<TableViewRow hasDetail="true" modelId="{id}">
 				<ImageView class="icon" image="{icon}"/>
 				<Label class="nameLabel" text="{name}"/>
 				<Label class="vicinityLabel" text="{vicinity}"/>

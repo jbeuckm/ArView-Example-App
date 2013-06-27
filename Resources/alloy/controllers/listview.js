@@ -9,7 +9,7 @@ function Controller() {
             var __alloyId12 = Ti.UI.createTableViewRow({
                 height: 50,
                 hasDetail: "true",
-                model: "undefined" != typeof __alloyId11.__transform["id"] ? __alloyId11.__transform["id"] : __alloyId11.get("id")
+                modelId: "undefined" != typeof __alloyId11.__transform["id"] ? __alloyId11.__transform["id"] : __alloyId11.get("id")
             });
             rows.push(__alloyId12);
             var __alloyId14 = Ti.UI.createImageView({
@@ -41,7 +41,11 @@ function Controller() {
         $.__views.__alloyId9.setData(rows);
     }
     function tableClick(e) {
-        alert(JSON.stringify(e));
+        alert(e.row.modelId);
+        var model = Alloy.Collections.GooglePlace.where({
+            id: e.row.modelId
+        });
+        Ti.API.info(model);
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -69,9 +73,6 @@ function Controller() {
     };
     _.extend($, $.__views);
     arguments[0] || {};
-    Alloy.Collections.GooglePlace.on("reset", function() {
-        alert(Alloy.Collections.GooglePlace.at(0).toJSON());
-    });
     Alloy.Collections.GooglePlace.trigger("reset");
     __defers["$.__views.__alloyId9!click!tableClick"] && $.__views.__alloyId9.addEventListener("click", tableClick);
     _.extend($, exports);
