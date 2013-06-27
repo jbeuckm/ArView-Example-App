@@ -11,6 +11,8 @@ function Controller() {
         updatePoiViews();
     }
     function showAR() {
+        var cameraTransform = Ti.UI.create2DMatrix();
+        cameraTransform = cameraTransform.scale(1);
         Ti.Geolocation.addEventListener("heading", headingCallback);
         Ti.Geolocation.addEventListener("location", locationCallback);
         Ti.Media.showCamera({
@@ -26,7 +28,8 @@ function Controller() {
             autohide: false,
             autofocus: "off",
             animated: false,
-            overlay: overlay
+            overlay: overlay,
+            transform: cameraTransform
         });
     }
     function closeAR() {

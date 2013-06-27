@@ -1,4 +1,3 @@
-//var Alloy = require('/alloy');
 
 try {
 	exports.close = function() {
