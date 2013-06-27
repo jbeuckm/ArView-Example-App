@@ -4,10 +4,12 @@
 
 	<Window id="win" title="List View">
 		
-		<TableView dataCollection="GooglePlace">
+		<TableView dataCollection="GooglePlace" onClick="tableClick">
 		
-			<TableViewRow title="{name}">
-				<Label text="{formatted_phone_number}"/>
+			<TableViewRow hasDetail="true" model="{id}">
+				<ImageView class="icon" image="{icon}"/>
+				<Label class="nameLabel" text="{name}"/>
+				<Label class="vicinityLabel" text="{vicinity}"/>
 			</TableViewRow>
 				
 		</TableView>

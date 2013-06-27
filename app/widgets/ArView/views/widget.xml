@@ -1,6 +1,7 @@
 <Alloy>
 	<Window id="win">
 		
+		<!-- this gets used as the overlay of the camera / not displayed directly -->
 		<View id="overlay">
 			
 			<View id="arContainer"/>
