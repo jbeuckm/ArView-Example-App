@@ -6,3 +6,4 @@ npm-debug.log
 tmp
 .map
 app/lib/config.js
+app/alloy.js

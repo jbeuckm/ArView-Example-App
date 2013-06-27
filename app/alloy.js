@@ -4,4 +4,4 @@ Alloy.Globals.googleNearbyPlacesUrl = "https://maps.googleapis.com/maps/api/plac
 Alloy.Globals.googlePlaceDetailUrl = "https://maps.googleapis.com/maps/api/place/details/json"
 
 
-Alloy.Globals.googleApiKey = "YOUR_GOOGLE_API_KEY";
+Alloy.Globals.googleApiKey = "AIzaSyDC3RWmkSYPEIyCPOI_DJGdLzPn7lrWh-E";
