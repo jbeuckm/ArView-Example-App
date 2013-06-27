@@ -1,15 +1,19 @@
 function Controller() {
-    function __alloyId14() {
-        var models = __alloyId13.models;
+    function __alloyId16() {
+        var models = __alloyId15.models;
         var len = models.length;
         var rows = [];
         for (var i = 0; len > i; i++) {
             var __alloyId11 = models[i];
             __alloyId11.__transform = {};
             var __alloyId12 = Ti.UI.createTableViewRow({
-                title: "undefined" != typeof __alloyId11.__transform["title"] ? __alloyId11.__transform["title"] : __alloyId11.get("title")
+                title: "undefined" != typeof __alloyId11.__transform["name"] ? __alloyId11.__transform["name"] : __alloyId11.get("name")
             });
             rows.push(__alloyId12);
+            var __alloyId14 = Ti.UI.createLabel({
+                text: "undefined" != typeof __alloyId11.__transform["formatted_phone_number"] ? __alloyId11.__transform["formatted_phone_number"] : __alloyId11.get("formatted_phone_number")
+            });
+            __alloyId12.add(__alloyId14);
         }
         $.__views.__alloyId9.setData(rows);
     }
@@ -30,13 +34,14 @@ function Controller() {
         id: "__alloyId9"
     });
     $.__views.win.add($.__views.__alloyId9);
-    var __alloyId13 = Alloy.Collections["GooglePlace"] || GooglePlace;
-    __alloyId13.on("fetch destroy change add remove reset", __alloyId14);
+    var __alloyId15 = Alloy.Collections["GooglePlace"] || GooglePlace;
+    __alloyId15.on("fetch destroy change add remove reset", __alloyId16);
     exports.destroy = function() {
-        __alloyId13.off("fetch destroy change add remove reset", __alloyId14);
+        __alloyId15.off("fetch destroy change add remove reset", __alloyId16);
     };
     _.extend($, $.__views);
     arguments[0] || {};
+    Alloy.Collections.GooglePlace.trigger("reset");
     _.extend($, exports);
 }
 

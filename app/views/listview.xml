@@ -6,7 +6,9 @@
 		
 		<TableView dataCollection="GooglePlace">
 		
-			<TableViewRow title="{title}"/>
+			<TableViewRow title="{name}">
+				<Label text="{formatted_phone_number}"/>
+			</TableViewRow>
 				
 		</TableView>
 		

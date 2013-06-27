@@ -61,7 +61,8 @@ function Controller() {
         id: "__alloyId3"
     });
     $.__views.activityIndicator = Ti.UI.createActivityIndicator({
-        id: "activityIndicator"
+        id: "activityIndicator",
+        message: "Loading Google Places..."
     });
     $.__views.__alloyId3.add($.__views.activityIndicator);
     $.__views.buttonHolder = Ti.UI.createView({
@@ -71,25 +72,25 @@ function Controller() {
     $.__views.__alloyId3.add($.__views.buttonHolder);
     $.__views.__alloyId4 = Ti.UI.createButton({
         top: 10,
-        title: "Map View",
+        title: "List View",
         id: "__alloyId4"
     });
     $.__views.buttonHolder.add($.__views.__alloyId4);
-    mapViewButton ? $.__views.__alloyId4.addEventListener("click", mapViewButton) : __defers["$.__views.__alloyId4!click!mapViewButton"] = true;
+    listViewButton ? $.__views.__alloyId4.addEventListener("click", listViewButton) : __defers["$.__views.__alloyId4!click!listViewButton"] = true;
     $.__views.__alloyId5 = Ti.UI.createButton({
         top: 10,
-        title: "A-R View",
+        title: "Map View",
         id: "__alloyId5"
     });
     $.__views.buttonHolder.add($.__views.__alloyId5);
-    arViewButton ? $.__views.__alloyId5.addEventListener("click", arViewButton) : __defers["$.__views.__alloyId5!click!arViewButton"] = true;
+    mapViewButton ? $.__views.__alloyId5.addEventListener("click", mapViewButton) : __defers["$.__views.__alloyId5!click!mapViewButton"] = true;
     $.__views.__alloyId6 = Ti.UI.createButton({
         top: 10,
-        title: "List View",
+        title: "A-R View",
         id: "__alloyId6"
     });
     $.__views.buttonHolder.add($.__views.__alloyId6);
-    listViewButton ? $.__views.__alloyId6.addEventListener("click", listViewButton) : __defers["$.__views.__alloyId6!click!listViewButton"] = true;
+    arViewButton ? $.__views.__alloyId6.addEventListener("click", arViewButton) : __defers["$.__views.__alloyId6!click!arViewButton"] = true;
     $.__views.nav = Ti.UI.iPhone.createNavigationGroup({
         window: $.__views.__alloyId3,
         id: "nav"
@@ -122,15 +123,15 @@ function Controller() {
         $.buttonHolder.visible = true;
         $.activityIndicator.hide();
     });
+    $.win.open();
     $.buttonHolder.visible = false;
     $.activityIndicator.show();
     Alloy.Collections.GooglePlace.fetch({
         loc: loc
     });
-    $.win.open();
-    __defers["$.__views.__alloyId4!click!mapViewButton"] && $.__views.__alloyId4.addEventListener("click", mapViewButton);
-    __defers["$.__views.__alloyId5!click!arViewButton"] && $.__views.__alloyId5.addEventListener("click", arViewButton);
-    __defers["$.__views.__alloyId6!click!listViewButton"] && $.__views.__alloyId6.addEventListener("click", listViewButton);
+    __defers["$.__views.__alloyId4!click!listViewButton"] && $.__views.__alloyId4.addEventListener("click", listViewButton);
+    __defers["$.__views.__alloyId5!click!mapViewButton"] && $.__views.__alloyId5.addEventListener("click", mapViewButton);
+    __defers["$.__views.__alloyId6!click!arViewButton"] && $.__views.__alloyId6.addEventListener("click", arViewButton);
     _.extend($, exports);
 }
 

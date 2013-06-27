@@ -8,16 +8,16 @@
 			
 		    <Window title="ArView Demo">
 		
-				<ActivityIndicator id="activityIndicator">Loading Google Places...</ActivityIndicator>
+				<ActivityIndicator id="activityIndicator" message="Loading Google Places..."/>
 		
 				<View id="buttonHolder">
 		
+					<Button onClick="listViewButton">List View</Button>		
+				
 					<Button onClick="mapViewButton">Map View</Button>
 					
 					<Button onClick="arViewButton">A-R View</Button>
 			
-					<Button onClick="listViewButton">List View</Button>		
-				
 				</View>
 				
 			</Window>

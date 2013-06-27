@@ -1,5 +1,5 @@
 /**
- * Wrap the logic around adding listeners to the accelerometer, including testing for Ti.Accelerometer undefined (TiShadow, Simulator)
+ * Wrap the logic around adding/removing listeners to the accelerometer
  * 
  */
 

@@ -3,6 +3,6 @@
 #url:http://www.beigerecords.com/joe
 #image:appicon.png
 #appid:com.beuckman.arview.example
-#desc:not specified
+#desc:Example app including a new ArView widget that expands on the Titanium example provided by Jeff Bonnes.
 #type:ipad
 #guid:37b1d8ce-d645-4f63-b824-90de36d96734

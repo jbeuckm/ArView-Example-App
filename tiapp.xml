@@ -14,7 +14,7 @@
     <version>0.5.0</version>
     <publisher>Joe Beuckman</publisher>
     <url>http://www.beigerecords.com/joe</url>
-    <description>not specified</description>
+    <description>Example app including a new ArView widget that expands on the Titanium example provided by Jeff Bonnes.</description>
     <copyright>nope, left</copyright>
     <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>

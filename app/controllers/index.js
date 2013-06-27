@@ -97,6 +97,7 @@ Alloy.Collections.GooglePlace.on('reset', function(e){
 
 });
 
+$.win.open();
 
 $.buttonHolder.visible = false;
 $.activityIndicator.show();
@@ -104,4 +105,3 @@ Alloy.Collections.GooglePlace.fetch({
 	loc: loc
 });
 
-$.win.open();
