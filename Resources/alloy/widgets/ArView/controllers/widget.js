@@ -128,15 +128,9 @@ function Controller() {
     function createRadarBlips() {
         for (i = 0, l = pois.length; l > i; i++) {
             var poi = pois[i];
-            var displayBlip = Ti.UI.createView({
-                height: "3dp",
-                width: "3dp",
-                backgroundColor: "white",
-                borderRadius: 2
-            });
-            poi.blip = displayBlip;
+            poi.blip = require("/alloy").createWidget("ArView", "blip", {}).getView();
             positionRadarBlip(poi);
-            radar.add(displayBlip);
+            radar.add(poi.blip);
         }
     }
     function positionRadarBlip(poi) {

@@ -330,26 +330,21 @@ function addViews() {
 	}
 }
 
+
+
 function createRadarBlips() {
 
 	for (i=0, l=pois.length; i<l; i++) {
 
 		var poi = pois[i];
+
 		// add to blip to the radar
 		// The Radar Blips ....
-
-		var displayBlip = Ti.UI.createView({
-			height : '3dp',
-			width : '3dp',
-			backgroundColor : 'white',
-			borderRadius : 2,
-		});
-		
-		poi.blip = displayBlip;
+		poi.blip = require('/alloy').createWidget('ArView', 'blip', {}).getView();
 
 		positionRadarBlip(poi);		
 		
-		radar.add(displayBlip);
+		radar.add(poi.blip);
 	}
 }
 
