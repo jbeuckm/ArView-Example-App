@@ -4,6 +4,8 @@
 
 	<Window id="win" title="List View">
 		
+		<Button onClick="clickClose">Close</Button>
+		
 		<TableView dataCollection="GooglePlace" onClick="tableClick">
 		
 			<TableViewRow hasDetail="true" modelId="{id}">

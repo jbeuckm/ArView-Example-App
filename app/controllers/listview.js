@@ -8,3 +8,6 @@ function tableClick(e) {
 }
 
 
+function clickClose() {
+	$.win.close();
+}

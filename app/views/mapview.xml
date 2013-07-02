@@ -4,9 +4,11 @@
 
 	<Window id="win" title="Map View">
 		
-			<View id="mapview" ns="Ti.Map"  >
-            
-            </View>
+		<Button onClick="clickClose">Close</Button>
+
+		<View id="mapview" ns="Ti.Map"  >
+        
+        </View>
             
 	</Window>
 	

@@ -23,11 +23,15 @@ function Controller() {
         };
         for (var i = 0, l = anns.length; l > i; i++) $.mapview.addAnnotation(anns[i]);
     }
+    function clickClose() {
+        $.win.close();
+    }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
     arguments[0] ? arguments[0]["$model"] : null;
     var $ = this;
     var exports = {};
+    var __defers = {};
     Alloy.Collections.instance("GooglePlace");
     $.__views.win = Ti.UI.createWindow({
         layout: "vertical",
@@ -36,13 +40,19 @@ function Controller() {
         title: "Map View"
     });
     $.__views.win && $.addTopLevelView($.__views.win);
-    var __alloyId22 = [];
+    $.__views.__alloyId23 = Ti.UI.createButton({
+        title: "Close",
+        id: "__alloyId23"
+    });
+    $.__views.win.add($.__views.__alloyId23);
+    clickClose ? $.__views.__alloyId23.addEventListener("click", clickClose) : __defers["$.__views.__alloyId23!click!clickClose"] = true;
+    var __alloyId24 = [];
     $.__views.mapview = Ti.Map.createView({
         animate: true,
         regionFit: true,
         userLocation: true,
         mapType: Ti.Map.STANDARD_TYPE,
-        annotations: __alloyId22,
+        annotations: __alloyId24,
         id: "mapview",
         ns: Ti.Map
     });
@@ -54,6 +64,7 @@ function Controller() {
     var loc = args.loc;
     var anns = createMapAnnotationsFromPois(pois);
     showMap(anns);
+    __defers["$.__views.__alloyId23!click!clickClose"] && $.__views.__alloyId23.addEventListener("click", clickClose);
     _.extend($, exports);
 }
 

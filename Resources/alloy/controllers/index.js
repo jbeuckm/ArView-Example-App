@@ -62,21 +62,18 @@ function Controller() {
     });
     $.__views.win.add($.__views.buttonHolder);
     $.__views.__alloyId3 = Ti.UI.createButton({
-        top: 10,
         title: "List View",
         id: "__alloyId3"
     });
     $.__views.buttonHolder.add($.__views.__alloyId3);
     listViewButton ? $.__views.__alloyId3.addEventListener("click", listViewButton) : __defers["$.__views.__alloyId3!click!listViewButton"] = true;
     $.__views.__alloyId4 = Ti.UI.createButton({
-        top: 10,
         title: "Map View",
         id: "__alloyId4"
     });
     $.__views.buttonHolder.add($.__views.__alloyId4);
     mapViewButton ? $.__views.__alloyId4.addEventListener("click", mapViewButton) : __defers["$.__views.__alloyId4!click!mapViewButton"] = true;
     $.__views.__alloyId5 = Ti.UI.createButton({
-        top: 10,
         title: "A-R View",
         id: "__alloyId5"
     });

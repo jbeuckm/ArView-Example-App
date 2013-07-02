@@ -1,13 +1,13 @@
 exports.definition = {
     config: {
         columns: {
-            id: "String",
-            name: "String",
-            icon: "String",
-            vicinity: "String",
-            reference: "String",
-            formatted_phone_number: "String",
-            website: "String"
+            id: "TEXT",
+            name: "TEXT",
+            icon: "TEXT",
+            vicinity: "TEXT",
+            reference: "TEXT",
+            formatted_phone_number: "TEXT",
+            website: "TEXT"
         },
         defaults: {},
         adapter: {

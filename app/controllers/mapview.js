@@ -48,4 +48,8 @@ showMap(anns);
 
 
 
+function clickClose() {
+	$.win.close();
+}
+
 
