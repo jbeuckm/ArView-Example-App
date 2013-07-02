@@ -3,7 +3,10 @@ var args = arguments[0] || {};
 $.poiView.modelId = args.id;
 
 $.titleLabel.text = args.title;
-$.ratingLabel.text = args.rating;
+
+exports.setDistance = function(d) {
+	$.distanceLabel.text = d;
+}
 
 if (args.image) {
 	$.poiImage.image = args.image;

@@ -1,7 +1,7 @@
 function WPATH(s) {
     var index = s.lastIndexOf("/");
     var path = -1 === index ? "ArView/" + s : s.substring(0, index) + "/ArView/" + s.substring(index + 1);
-    return true && 0 !== path.indexOf("/") ? "/" + path : path;
+    return path;
 }
 
 function Controller() {
@@ -12,52 +12,53 @@ function Controller() {
     var $ = this;
     var exports = {};
     $.__views.poiView = Ti.UI.createView({
-        layout: null,
-        height: "150dp",
-        width: "150dp",
-        backgroundColor: "black",
+        layout: "horizontal",
+        height: "28dp",
+        width: Ti.UI.SIZE,
+        backgroundColor: "white",
         opacity: .6,
-        borderRadius: 5,
         id: "poiView"
     });
     $.__views.poiView && $.addTopLevelView($.__views.poiView);
-    $.__views.titleLabel = Ti.UI.createLabel({
-        textAlign: "center",
-        color: "white",
-        font: {
-            fontSize: "18dp",
-            fontWeight: "bold"
-        },
-        height: "42dp",
-        top: "5dp",
-        id: "titleLabel"
-    });
-    $.__views.poiView.add($.__views.titleLabel);
     $.__views.poiImage = Ti.UI.createImageView({
-        width: "130dp",
-        height: "65dp",
-        top: "57dp",
+        width: "24dp",
+        height: "24dp",
+        left: "2dp",
         id: "poiImage"
     });
     $.__views.poiView.add($.__views.poiImage);
-    $.__views.ratingLabel = Ti.UI.createLabel({
-        textAlign: "center",
-        color: "white",
+    $.__views.titleLabel = Ti.UI.createLabel({
+        color: "#000",
+        width: Ti.UI.SIZE,
         font: {
-            fontSize: "14dp",
+            fontSize: "20dp",
             fontWeight: "bold"
         },
-        height: "20dp",
-        bottom: "5dp",
-        id: "ratingLabel"
+        top: "3dp",
+        right: "7dp",
+        left: "3dp",
+        id: "titleLabel"
     });
-    $.__views.poiView.add($.__views.ratingLabel);
+    $.__views.poiView.add($.__views.titleLabel);
+    $.__views.distanceLabel = Ti.UI.createLabel({
+        color: "#000",
+        width: Ti.UI.SIZE,
+        font: {
+            fontSize: "16dp"
+        },
+        top: "5dp",
+        right: "5dp",
+        id: "distanceLabel"
+    });
+    $.__views.poiView.add($.__views.distanceLabel);
     exports.destroy = function() {};
     _.extend($, $.__views);
     var args = arguments[0] || {};
     $.poiView.modelId = args.id;
     $.titleLabel.text = args.title;
-    $.ratingLabel.text = args.rating;
+    exports.setDistance = function(d) {
+        $.distanceLabel.text = d;
+    };
     args.image ? $.poiImage.image = args.image : $.poiImage.visible = false;
     _.extend($, exports);
 }

@@ -6,7 +6,7 @@
 			
 			<View id="arContainer"/>
 			
-			<Button id="closeButton" platform="ios"/>
+			<Button id="closeButton"/>
 
 			<View id="radarView"></View>
 			

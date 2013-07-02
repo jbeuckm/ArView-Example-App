@@ -145,12 +145,11 @@ function assignPOIs(_pois) {
 	attachArViewsToPois(pois);
 
 	addViews();
-	createRadarBlips();
-	
+	createRadarBlips();	
+
 	if (deviceLocation && deviceBearing) {
 		updateRelativePositions();
 	}
-
 }
 
 if (args.pois) {
@@ -208,7 +207,7 @@ function headingCallback(e) {
 
 var minPoiDistance, maxPoiDistance;
 var distanceRange = 1;
-var minPoiScale = .3, maxPoiScale = 1;
+var minPoiScale = .7, maxPoiScale = 1.5;
 var poiScaleRange = maxPoiScale - minPoiScale;
 
 /**
@@ -221,16 +220,15 @@ function updateRelativePositions() {
 
 	for (i=0, l=pois.length; i<l; i++) {
 
-//Ti.API.info('poi '+i);
 		var poi = pois[i];
 		
 		if (poi.view) {
 
 			poi.distance = calculateDistance(deviceLocation, poi);
-//Ti.API.info('poi = '+poi.latitude+','+poi.longitude);
-//Ti.API.info('deviceLocation = '+deviceLocation.latitude+','+deviceLocation.longitude);
-//Ti.API.info('poi.distance = '+poi.distance);
-
+			
+			// this would ideally be more of a databinding event
+			poi.controller.setDistance(Math.floor(poi.distance)+'m');
+			
 			if (maxRange && (poi.distance <= maxRange) ) {
 				
 				maxPoiDistance = Math.max(maxPoiDistance, poi.distance);
@@ -241,12 +239,10 @@ function updateRelativePositions() {
 				
 				positionRadarBlip(poi);
 
-//Ti.API.info('poi.bearing = '+poi.bearing);
 			} 
 			else {
 				// don't show pois that are beyond maxDistance
 				poi.inRange = false;
-//				Ti.API.debug(poi.title + " not added, maxRange=" + maxRange);
 			}
 		}
 		else {
@@ -265,6 +261,7 @@ function updateRelativePositions() {
 	for (i=0, l=pois.length; i<l; i++) {
 		pois[i].view.zIndex = i;
 	}
+
 }
 
 var limitLeft = -halfScreenWidth - 100;
@@ -285,7 +282,6 @@ function updatePoiViews() {
 			poi.blip.visible = true;
 
 			var horizontalPositionInScene = projectBearingIntoScene(poi.bearing);
-//Ti.API.info('horizontalPositionInScene = '+horizontalPositionInScene);
 
 			if ((horizontalPositionInScene > limitLeft) && (horizontalPositionInScene < limitRight)) {
 				poi.view.visible = true;
@@ -434,14 +430,15 @@ function attachArViewsToPois(pois) {
 		
 		var poi = pois[i];
 		
-		var view = require('/alloy').createWidget('ArView', 'poi', {
+		var c = require('/alloy').createWidget('ArView', 'poi', {
 			id: poi.id,
 			title: poi.title,
-			image: poi.image,
-			rating: "rating: " + poi.rating
-		}).getView();
+			image: poi.image
+		});
 
-		poi.view = view;
+		poi.controller = c;
+
+		poi.view = c.getView();
 	}
 }
 

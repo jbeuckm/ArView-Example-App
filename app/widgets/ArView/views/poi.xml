@@ -2,11 +2,11 @@
 	
 	<View id="poiView">
 
-		<Label id="titleLabel"/>
-
 		<ImageView id="poiImage"/>
 
-		<Label id="ratingLabel"/>
+		<Label id="titleLabel"/>
+
+		<Label id="distanceLabel"/>
 
 	</View>
 		

@@ -1,40 +1,36 @@
 
 '#poiView': {
-	height : '150dp',
-	width : '150dp',
-	backgroundColor : 'black',
+	height : '28dp',
+	width: Ti.UI.SIZE,
+	backgroundColor : 'white',
 	opacity : 0.6,
-	borderRadius : 5,
-	layout: null
+	layout: 'horizontal'
 }
 
 '#poiImage': {
-	width : '130dp',
-	height : '65dp',
-	top : '57dp'
-//	image : poi.image
+	width : '24dp',
+	height : '24dp',
+	left: '2dp'
 }
 
 '#titleLabel': {
-	textAlign : 'center',
-//	text : poi.title,
-	color : 'white',
+	color : '#000',
+	width: Ti.UI.SIZE,
 	font : {
-		fontSize : '18dp',
+		fontSize : '20dp',
 		fontWeight : 'bold'
 	},
-	height : '42dp',
-	top : '5dp'
+	top : '3dp',
+	right: '7dp',
+	left: '3dp'
 }
 
-'#ratingLabel': {
-	textAlign : 'center',
-//	text : "rating: " + poi.rating,
-	color : 'white',
-	font : {
-		fontSize : '14dp',
-		fontWeight : 'bold'
+'#distanceLabel': {
+	color: '#000',
+	width: Ti.UI.SIZE,
+	font: {
+		fontSize : '16dp'
 	},
-	height : '20dp',
-	bottom : '5dp'
+	top : '6dp',
+	right: '5dp'
 }

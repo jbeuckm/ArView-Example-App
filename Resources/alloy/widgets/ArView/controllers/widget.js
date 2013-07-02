@@ -1,7 +1,7 @@
 function WPATH(s) {
     var index = s.lastIndexOf("/");
     var path = -1 === index ? "ArView/" + s : s.substring(0, index) + "/ArView/" + s.substring(index + 1);
-    return true && 0 !== path.indexOf("/") ? "/" + path : path;
+    return path;
 }
 
 function Controller() {
@@ -80,6 +80,7 @@ function Controller() {
             var poi = pois[i];
             if (poi.view) {
                 poi.distance = calculateDistance(deviceLocation, poi);
+                poi.controller.setDistance(Math.floor(poi.distance) + "m");
                 if (maxRange && maxRange >= poi.distance) {
                     maxPoiDistance = Math.max(maxPoiDistance, poi.distance);
                     minPoiDistance = Math.min(minPoiDistance, poi.distance);
@@ -177,13 +178,13 @@ function Controller() {
     function attachArViewsToPois(pois) {
         for (var i = 0; pois.length > i; i++) {
             var poi = pois[i];
-            var view = require("/alloy").createWidget("ArView", "poi", {
+            var c = require("/alloy").createWidget("ArView", "poi", {
                 id: poi.id,
                 title: poi.title,
-                image: poi.image,
-                rating: "rating: " + poi.rating
-            }).getView();
-            poi.view = view;
+                image: poi.image
+            });
+            poi.controller = c;
+            poi.view = c.getView();
         }
     }
     new (require("alloy/widget"))("ArView");
@@ -220,6 +221,15 @@ function Controller() {
         id: "arContainer"
     });
     $.__views.overlay.add($.__views.arContainer);
+    $.__views.closeButton = Ti.UI.createButton({
+        top: "5dp",
+        right: "5dp",
+        height: "45dp",
+        width: "45dp",
+        backgroundImage: "/images/ArView/close.png",
+        id: "closeButton"
+    });
+    $.__views.overlay.add($.__views.closeButton);
     $.__views.radarView = Ti.UI.createView({
         layout: null,
         backgroundImage: "/images/ArView/radar.png",
@@ -248,7 +258,7 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     var args = arguments[0] || {};
-    var isAndroid = true;
+    var isAndroid = "android" == Ti.Platform.osname;
     if (isAndroid) {
         var screenWidth = Ti.Platform.displayCaps.platformHeight;
         var screenHeight = Ti.Platform.displayCaps.platformWidth;
@@ -301,7 +311,7 @@ function Controller() {
     args.initialLocation && (deviceLocation = args.initialLocation);
     args.pois && assignPOIs(args.pois);
     var minPoiDistance, maxPoiDistance;
-    var minPoiScale = .3, maxPoiScale = 1;
+    var minPoiScale = .7, maxPoiScale = 1.5;
     var poiScaleRange = maxPoiScale - minPoiScale;
     var limitLeft = -halfScreenWidth - 100;
     var limitRight = +halfScreenWidth + 100;
