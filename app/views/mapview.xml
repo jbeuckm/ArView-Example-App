@@ -4,6 +4,10 @@
 
 	<Window id="win" title="Map View">
 		
+			<View id="mapview" ns="Ti.Map"  >
+            
+            </View>
+            
 	</Window>
 	
 </Alloy>

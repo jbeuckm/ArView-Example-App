@@ -14,21 +14,14 @@ function Controller() {
         }
         return annotations;
     }
-    function showMap(annotations) {
-        var map = Ti.Map.createView({
-            mapType: Titanium.Map.STANDARD_TYPE,
-            region: {
-                latitude: loc.latitude,
-                longitude: loc.longitude,
-                latitudeDelta: .01,
-                longitudeDelta: .01
-            },
-            animate: true,
-            regionFit: true,
-            userLocation: true,
-            annotations: annotations
-        });
-        $.win.add(map);
+    function showMap(anns) {
+        $.mapview.region = {
+            latitude: loc.latitude,
+            longitude: loc.longitude,
+            latitudeDelta: .01,
+            longitudeDelta: .01
+        };
+        for (var i = 0, l = anns.length; l > i; i++) $.mapview.addAnnotation(anns[i]);
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -43,6 +36,17 @@ function Controller() {
         title: "Map View"
     });
     $.__views.win && $.addTopLevelView($.__views.win);
+    var __alloyId23 = [];
+    $.__views.mapview = Ti.Map.createView({
+        animate: true,
+        regionFit: true,
+        userLocation: true,
+        mapType: Ti.Map.STANDARD_TYPE,
+        annotations: __alloyId23,
+        id: "mapview",
+        ns: Ti.Map
+    });
+    $.__views.win.add($.__views.mapview);
     exports.destroy = function() {};
     _.extend($, $.__views);
     var args = arguments[0] || {};

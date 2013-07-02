@@ -27,23 +27,19 @@ function createMapAnnotationsFromPois(pois) {
 }
 
 
-function showMap(annotations) {
+function showMap(anns) {
 	
-	var map = Ti.Map.createView({
-		mapType : Titanium.Map.STANDARD_TYPE,
-		region : {
-			latitude : loc.latitude,
-			longitude : loc.longitude,
-			latitudeDelta : 0.01,
-			longitudeDelta : 0.01
-		},
-		animate : true,
-		regionFit : true,
-		userLocation : true,
-		annotations : annotations
-	});
+	$.mapview.region = {
+		latitude : loc.latitude,
+		longitude : loc.longitude,
+		latitudeDelta : 0.01,
+		longitudeDelta : 0.01
+	};
+	
+	for (var i=0, l=anns.length; i<l; i++) {
+		$.mapview.addAnnotation(anns[i]);
+	}
 
-	$.win.add(map);
 }
 
 

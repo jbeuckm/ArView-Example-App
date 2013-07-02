@@ -1,3 +1,9 @@
+'#mapview': {
+	animate: true,
+	regionFit: true,
+	userLocation: true,
+	mapType: Ti.Map.STANDARD_TYPE
+}
 
 
 "#overlay":{
