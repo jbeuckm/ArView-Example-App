@@ -137,10 +137,10 @@ function Controller() {
         }
     }
     function positionRadarBlip(poi) {
-        var rad = toRad(poi.bearing + 90);
+        var rad = toRad(poi.bearing);
         var relativeDistance = poi.distance / (1.2 * maxRange);
-        var x = 40 + 40 * relativeDistance * Math.cos(rad);
-        var y = 40 - 40 * relativeDistance * Math.sin(rad);
+        var x = 40 + 40 * relativeDistance * Math.sin(rad);
+        var y = 40 - 40 * relativeDistance * Math.cos(rad);
         poi.blip.left = x - 1 + "dp";
         poi.blip.top = y - 1 + "dp";
     }

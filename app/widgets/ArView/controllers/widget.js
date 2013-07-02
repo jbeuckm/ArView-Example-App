@@ -355,11 +355,11 @@ function createRadarBlips() {
 
 function positionRadarBlip(poi) {
 
-	var rad = toRad(poi.bearing + 90);
+	var rad = toRad(poi.bearing);
 
 	var relativeDistance = poi.distance / (maxRange * 1.2);
-	var x = (40 + (relativeDistance * 40 * Math.cos(rad)));
-	var y = (40 - (relativeDistance * 40 * Math.sin(rad)));
+	var x = (40 + (relativeDistance * 40 * Math.sin(rad)));
+	var y = (40 - (relativeDistance * 40 * Math.cos(rad)));
 	
 	poi.blip.left = (x - 1) + "dp";
 	poi.blip.top = (y - 1) + "dp";
