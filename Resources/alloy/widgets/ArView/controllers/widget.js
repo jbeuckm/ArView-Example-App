@@ -1,7 +1,7 @@
 function WPATH(s) {
     var index = s.lastIndexOf("/");
     var path = -1 === index ? "ArView/" + s : s.substring(0, index) + "/ArView/" + s.substring(index + 1);
-    return path;
+    return true && 0 !== path.indexOf("/") ? "/" + path : path;
 }
 
 function Controller() {
@@ -21,7 +21,7 @@ function Controller() {
                 closeAR();
             },
             error: function() {
-                alert("unable to open camera view");
+                Ti.API.error("unable to open camera view");
             },
             mediaTypes: [ Ti.Media.MEDIA_TYPE_VIDEO, Ti.Media.MEDIA_TYPE_PHOTO ],
             showControls: false,
@@ -220,15 +220,6 @@ function Controller() {
         id: "arContainer"
     });
     $.__views.overlay.add($.__views.arContainer);
-    $.__views.closeButton = Ti.UI.createButton({
-        top: "5dp",
-        right: "5dp",
-        height: "45dp",
-        width: "45dp",
-        backgroundImage: "/images/ArView/close.png",
-        id: "closeButton"
-    });
-    $.__views.overlay.add($.__views.closeButton);
     $.__views.radarView = Ti.UI.createView({
         layout: null,
         backgroundImage: "/images/ArView/radar.png",
@@ -257,7 +248,7 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     var args = arguments[0] || {};
-    var isAndroid = "android" == Ti.Platform.osname;
+    var isAndroid = true;
     if (isAndroid) {
         var screenWidth = Ti.Platform.displayCaps.platformHeight;
         var screenHeight = Ti.Platform.displayCaps.platformWidth;

@@ -36,13 +36,13 @@ function Controller() {
         title: "Map View"
     });
     $.__views.win && $.addTopLevelView($.__views.win);
-    var __alloyId23 = [];
+    var __alloyId22 = [];
     $.__views.mapview = Ti.Map.createView({
         animate: true,
         regionFit: true,
         userLocation: true,
         mapType: Ti.Map.STANDARD_TYPE,
-        annotations: __alloyId23,
+        annotations: __alloyId22,
         id: "mapview",
         ns: Ti.Map
     });

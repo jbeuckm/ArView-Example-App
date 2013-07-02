@@ -17,18 +17,14 @@ function Controller() {
             loc: loc,
             pois: pois
         }).getView();
-        $.nav.open(map, {
-            animated: true
-        });
+        map.open();
     }
     function listViewButton() {
         var list = Alloy.createController("listview", {
             loc: loc,
             pois: pois
         }).getView();
-        $.nav.open(list, {
-            animated: true
-        });
+        list.open();
     }
     function convertGooglePlaceToPoi(place) {
         return {
@@ -54,49 +50,38 @@ function Controller() {
         id: "win"
     });
     $.__views.win && $.addTopLevelView($.__views.win);
-    $.__views.__alloyId3 = Ti.UI.createWindow({
-        layout: "vertical",
-        backgroundColor: "#666",
-        title: "ArView Demo",
-        id: "__alloyId3"
-    });
     $.__views.activityIndicator = Ti.UI.createActivityIndicator({
         top: 50,
         id: "activityIndicator",
         message: "Loading Google Places..."
     });
-    $.__views.__alloyId3.add($.__views.activityIndicator);
+    $.__views.win.add($.__views.activityIndicator);
     $.__views.buttonHolder = Ti.UI.createView({
         layout: "vertical",
         id: "buttonHolder"
     });
-    $.__views.__alloyId3.add($.__views.buttonHolder);
-    $.__views.__alloyId4 = Ti.UI.createButton({
+    $.__views.win.add($.__views.buttonHolder);
+    $.__views.__alloyId3 = Ti.UI.createButton({
         top: 10,
         title: "List View",
+        id: "__alloyId3"
+    });
+    $.__views.buttonHolder.add($.__views.__alloyId3);
+    listViewButton ? $.__views.__alloyId3.addEventListener("click", listViewButton) : __defers["$.__views.__alloyId3!click!listViewButton"] = true;
+    $.__views.__alloyId4 = Ti.UI.createButton({
+        top: 10,
+        title: "Map View",
         id: "__alloyId4"
     });
     $.__views.buttonHolder.add($.__views.__alloyId4);
-    listViewButton ? $.__views.__alloyId4.addEventListener("click", listViewButton) : __defers["$.__views.__alloyId4!click!listViewButton"] = true;
+    mapViewButton ? $.__views.__alloyId4.addEventListener("click", mapViewButton) : __defers["$.__views.__alloyId4!click!mapViewButton"] = true;
     $.__views.__alloyId5 = Ti.UI.createButton({
         top: 10,
-        title: "Map View",
+        title: "A-R View",
         id: "__alloyId5"
     });
     $.__views.buttonHolder.add($.__views.__alloyId5);
-    mapViewButton ? $.__views.__alloyId5.addEventListener("click", mapViewButton) : __defers["$.__views.__alloyId5!click!mapViewButton"] = true;
-    $.__views.__alloyId6 = Ti.UI.createButton({
-        top: 10,
-        title: "A-R View",
-        id: "__alloyId6"
-    });
-    $.__views.buttonHolder.add($.__views.__alloyId6);
-    arViewButton ? $.__views.__alloyId6.addEventListener("click", arViewButton) : __defers["$.__views.__alloyId6!click!arViewButton"] = true;
-    $.__views.nav = Ti.UI.iPhone.createNavigationGroup({
-        window: $.__views.__alloyId3,
-        id: "nav"
-    });
-    $.__views.win.add($.__views.nav);
+    arViewButton ? $.__views.__alloyId5.addEventListener("click", arViewButton) : __defers["$.__views.__alloyId5!click!arViewButton"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     try {
@@ -130,9 +115,9 @@ function Controller() {
     Alloy.Collections.GooglePlace.fetch({
         loc: loc
     });
-    __defers["$.__views.__alloyId4!click!listViewButton"] && $.__views.__alloyId4.addEventListener("click", listViewButton);
-    __defers["$.__views.__alloyId5!click!mapViewButton"] && $.__views.__alloyId5.addEventListener("click", mapViewButton);
-    __defers["$.__views.__alloyId6!click!arViewButton"] && $.__views.__alloyId6.addEventListener("click", arViewButton);
+    __defers["$.__views.__alloyId3!click!listViewButton"] && $.__views.__alloyId3.addEventListener("click", listViewButton);
+    __defers["$.__views.__alloyId4!click!mapViewButton"] && $.__views.__alloyId4.addEventListener("click", mapViewButton);
+    __defers["$.__views.__alloyId5!click!arViewButton"] && $.__views.__alloyId5.addEventListener("click", arViewButton);
     _.extend($, exports);
 }
 

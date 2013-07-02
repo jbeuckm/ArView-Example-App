@@ -15,7 +15,7 @@ var accelerometerCallback = function(e) {
 exports.start = function() {
 	
 	if (Ti.Platform.model === 'Simulator' || Ti.Platform.model.indexOf('sdk') !== -1) {
-		alert('Accelerometer does not work on a virtual device');
+		Ti.API.error('Accelerometer does not work on a virtual device');
 	} else {
 		Ti.Accelerometer.addEventListener('update', accelerometerCallback);
 		if (Ti.Platform.name === 'android') {

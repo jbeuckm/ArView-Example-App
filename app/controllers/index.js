@@ -54,7 +54,8 @@ function mapViewButton() {
 		pois: pois
 	}).getView();
 
-	$.nav.open(map, {animated:true});
+//	$.nav.open(map, {animated:true});
+	map.open();
 }
 
 function listViewButton() {
@@ -64,7 +65,8 @@ function listViewButton() {
 		pois: pois
 	}).getView();
 
-	$.nav.open(list, {animated:true});
+//	$.nav.open(list, {animated:true});
+	list.open();
 }
 
 

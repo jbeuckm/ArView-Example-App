@@ -3,11 +3,11 @@
 	<Collection src="GooglePlace"/>
 
 	<Window id="win">
-		
+		<!-->
 		<NavigationGroup id="nav" platform="ios">
-			
-		    <Window title="ArView Demo">
 		
+		    <Window title="ArView Demo">
+-->		
 				<ActivityIndicator id="activityIndicator" message="Loading Google Places..."/>
 		
 				<View id="buttonHolder">
@@ -19,11 +19,11 @@
 					<Button onClick="arViewButton">A-R View</Button>
 			
 				</View>
-				
+<!-->				
 			</Window>
 		
 		</NavigationGroup>		
-
+-->
 	</Window>
 	
 </Alloy>

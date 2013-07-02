@@ -74,7 +74,7 @@ function showAR() {
 			closeAR();
 		},
 		error : function(error) {
-			alert('unable to open camera view');
+			Ti.API.error('unable to open camera view');
 //			closeAR();
 		},
 		mediaTypes : [Ti.Media.MEDIA_TYPE_VIDEO, Ti.Media.MEDIA_TYPE_PHOTO],
