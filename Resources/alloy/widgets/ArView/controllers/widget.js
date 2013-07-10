@@ -41,9 +41,6 @@ function Controller() {
             $.win.close();
         }, 500);
     }
-    function doClose() {
-        closeAR();
-    }
     function assignPOIs(_pois) {
         pois = _pois;
         attachArViewsToPois(pois);
@@ -52,7 +49,7 @@ function Controller() {
         deviceLocation && deviceBearing && updateRelativePositions();
     }
     function poiClick(e) {
-        Ti.API.info(e.source);
+        Ti.API.info(e);
     }
     function locationCallback(e) {
         deviceLocation = e.coords;
@@ -323,7 +320,6 @@ function Controller() {
         calculateDistance: calculateDistance,
         calculateBearing: calculateBearing,
         toRad: toRad,
-        doClose: doClose,
         closeAR: closeAR
     };
     _.extend($, exports);

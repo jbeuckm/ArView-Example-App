@@ -91,7 +91,6 @@ module.exports.sync = function(method, model, options) {
 			
 				var request = Alloy.Globals.googleNearbyPlacesUrl;
 				request += '?' + require('utilities').serialize(params);
-Ti.API.info('GET '+request);
 			
 				xhr.open('GET', request);
 				xhr.send();

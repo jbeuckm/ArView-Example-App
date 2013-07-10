@@ -6,6 +6,6 @@ Alloy.Globals.googleNearbyPlacesUrl = "https://maps.googleapis.com/maps/api/plac
 
 Alloy.Globals.googlePlaceDetailUrl = "https://maps.googleapis.com/maps/api/place/details/json";
 
-Alloy.Globals.googleApiKey = "AIzaSyDC3RWmkSYPEIyCPOI_DJGdLzPn7lrWh-E";
+Alloy.Globals.googleApiKey = "AIzaSyDV44bmXbcfcTzBuIvEwkSW7L0Th25iGuE";
 
 Alloy.createController("index");

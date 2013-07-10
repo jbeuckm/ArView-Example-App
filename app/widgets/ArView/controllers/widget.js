@@ -129,9 +129,11 @@ $.win.addEventListener('open', function() {
 	Ti.API.debug('AR Window Open...');
 	setTimeout(showAR, 500);
 });
+/*
 function doClose() {
 	closeAR();
 };
+*/
 $.closeButton.addEventListener('click', closeAR);
 
 if (args.initialLocation) {
@@ -157,7 +159,7 @@ if (args.pois) {
 }
 
 function poiClick(e) {
-	Ti.API.info(e.source);
+	Ti.API.info(e);
 }
 
 
@@ -448,7 +450,6 @@ exports = {
 	calculateDistance: calculateDistance,
 	calculateBearing: calculateBearing,
 	toRad: toRad,
-	doClose: doClose,
 	closeAR: closeAR
 };
 

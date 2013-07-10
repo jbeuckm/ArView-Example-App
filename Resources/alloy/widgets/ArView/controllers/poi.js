@@ -46,7 +46,7 @@ function Controller() {
         font: {
             fontSize: "16dp"
         },
-        top: "5dp",
+        top: "6dp",
         right: "5dp",
         id: "distanceLabel"
     });
