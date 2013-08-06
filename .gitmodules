@@ -1,0 +1,3 @@
+[submodule "app/widgets/ArView"]
+	path = app/widgets/ArView
+	url = https://github.com/jbeuckm/ArView.git
