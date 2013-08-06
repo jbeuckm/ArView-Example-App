@@ -18,7 +18,7 @@ function Controller() {
         Ti.Media.showCamera({
             success: function() {},
             cancel: function() {
-                closeAR();
+                Ti.API.error("android user cancelled open ar view");
             },
             error: function() {
                 Ti.API.error("unable to open camera view");
@@ -32,7 +32,7 @@ function Controller() {
             transform: cameraTransform
         });
     }
-    function closeAR() {
+    function closeAndDestroy() {
         acc.destroy();
         Ti.Geolocation.removeEventListener("heading", headingCallback);
         Ti.Geolocation.removeEventListener("location", locationCallback);
@@ -52,6 +52,7 @@ function Controller() {
         Ti.API.info(e);
     }
     function locationCallback(e) {
+        Ti.API.info("locationCallback()");
         deviceLocation = e.coords;
         if (!deviceLocation) {
             Ti.API.warn("location not known. Can't draw pois");
@@ -190,6 +191,7 @@ function Controller() {
     arguments[0] ? arguments[0]["$model"] : null;
     var $ = this;
     var exports = {};
+    var __defers = {};
     $.__views.win = Ti.UI.createWindow({
         layout: null,
         backgroundColor: "#666",
@@ -227,6 +229,7 @@ function Controller() {
         id: "closeButton"
     });
     $.__views.overlay.add($.__views.closeButton);
+    closeAndDestroy ? $.__views.closeButton.addEventListener("click", closeAndDestroy) : __defers["$.__views.closeButton!click!closeAndDestroy"] = true;
     $.__views.radarView = Ti.UI.createView({
         layout: null,
         backgroundImage: "/images/ArView/radar.png",
@@ -304,7 +307,7 @@ function Controller() {
         Ti.API.debug("AR Window Open...");
         setTimeout(showAR, 500);
     });
-    $.closeButton.addEventListener("click", closeAR);
+    args.hideCloseButton && ($.closeButton.visible = false);
     args.initialLocation && (deviceLocation = args.initialLocation);
     args.pois && assignPOIs(args.pois);
     var minPoiDistance, maxPoiDistance;
@@ -320,8 +323,9 @@ function Controller() {
         calculateDistance: calculateDistance,
         calculateBearing: calculateBearing,
         toRad: toRad,
-        closeAR: closeAR
+        closeAndDestroy: closeAndDestroy
     };
+    __defers["$.__views.closeButton!click!closeAndDestroy"] && $.__views.closeButton.addEventListener("click", closeAndDestroy);
     _.extend($, exports);
 }
 
