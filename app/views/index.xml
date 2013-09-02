@@ -1,29 +1,17 @@
 <Alloy>
 
-	<Collection src="GooglePlace"/>
-
 	<Window id="win">
-		<!-->
-		<NavigationGroup id="nav" platform="ios">
 		
-		    <Window title="ArView Demo">
--->		
-				<ActivityIndicator id="activityIndicator" message="Loading Google Places..."/>
+		<View id="buttonHolder">
+
+			<Button onClick="listViewButton">List View</Button>		
 		
-				<View id="buttonHolder">
-		
-					<Button onClick="listViewButton">List View</Button>		
-				
-					<Button onClick="mapViewButton">Map View</Button>
-					
-					<Button onClick="arViewButton">A-R View</Button>
+			<Button onClick="mapViewButton">Map View</Button>
 			
-				</View>
-<!-->				
-			</Window>
-		
-		</NavigationGroup>		
--->
+			<Button onClick="arViewButton">A-R View</Button>
+	
+		</View>
+
 	</Window>
 	
 </Alloy>
