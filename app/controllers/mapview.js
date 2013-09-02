@@ -26,14 +26,13 @@ function showMap(anns) {
 	$.mapview.region = {
 		latitude : loc.latitude,
 		longitude : loc.longitude,
-		latitudeDelta : 0.02,
-		longitudeDelta : 0.02
+		latitudeDelta : 0.03,
+		longitudeDelta : 0.03
 	};
 	
 	for (var i=0, l=anns.length; i<l; i++) {
 		$.mapview.addAnnotation(anns[i]);
 	}
-
 }
 
 

@@ -4,8 +4,6 @@
 		
 		<View id="buttonHolder">
 
-			<Button onClick="listViewButton">List View</Button>		
-		
 			<Button onClick="mapViewButton">Map View</Button>
 			
 			<Button onClick="arViewButton">A-R View</Button>
