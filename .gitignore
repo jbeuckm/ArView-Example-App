@@ -7,3 +7,4 @@ tmp
 .map
 ./app/alloy.js
 Resources
+plugins
