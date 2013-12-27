@@ -7,3 +7,7 @@ This app demonstrates use of the [ArView widget](https://github.com/jbeuckm/ArVi
 The ArView widget is a submodule in the repo. So, clone it with the "recursive" flag like this:
 
 git clone --recursive https://github.com/jbeuckm/ArView-Example-App.git
+
+### Screenshot ###
+
+![Screenshot](screenshot.jpg)
