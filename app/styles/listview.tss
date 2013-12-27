@@ -1,9 +1,9 @@
-'.icon': {
+".icon": {
 	left: 0,
 	height: 40
 }
 
-'.nameLabel': {
+".nameLabel": {
 	top: 5,
 	left: 65,
 	font: {
@@ -16,7 +16,7 @@ TableViewRow: {
 	height: 50
 }
 
-'.vicinityLabel': {
+".vicinityLabel": {
 	bottom: 5,
 	left: 65,
 	font: {

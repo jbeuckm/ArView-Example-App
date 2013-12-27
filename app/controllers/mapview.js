@@ -12,7 +12,7 @@ function createMapAnnotationsFromPois(pois) {
 		
 		var poi = pois[i];
 		
-        var annotation = Ti.Map.createAnnotation(poi);
+        var annotation = Alloy.Globals.Map.createAnnotation(poi);
         
         annotations.push(annotation);
 	}

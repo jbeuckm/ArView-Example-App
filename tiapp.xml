@@ -8,14 +8,14 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>3.1.3.GA</sdk-version>
+    <sdk-version>3.2.0.GA</sdk-version>
     <id>com.beuckman.arview.example</id>
-    <name>ArView Widget</name>
-    <version>0.5.0</version>
+    <name>ArView Example</name>
+    <version>0.5.1</version>
     <publisher>Joe Beuckman</publisher>
     <url>http://www.beigerecords.com/joe</url>
     <description>Example app including a new ArView widget that expands on the Titanium example provided by Jeff Bonnes.</description>
-    <copyright>nope, left</copyright>
+    <copyright>no</copyright>
     <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
@@ -46,7 +46,10 @@
         </splash>
         <theme>default</theme>
     </mobileweb>
-    <modules/>
+    <modules>
+        <module platform="iphone">ti.map</module>
+        <module platform="android">ti.map</module>
+    </modules>
     <plugins>
         <plugin version="1.0">ti.alloy</plugin>
     </plugins>

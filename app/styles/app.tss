@@ -1,10 +1,10 @@
 Window: {
-	layout: 'vertical',
-	backgroundColor: '#666'
+	layout: "vertical",
+	backgroundColor: "#fff"
 }
 
 View: {
-	layout: 'vertical'
+	layout: "vertical"
 }
 
 

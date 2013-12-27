@@ -4,9 +4,9 @@
 
 	<Window id="win" title="Map View">
 		
-		<Button onClick="clickClose">Close</Button>
+		<Button id="closeButton" onClick="clickClose">Close</Button>
 
-		<View id="mapview" ns="Ti.Map"  >
+		<View id="mapview" ns="Alloy.Globals.Map">
         
         </View>
             

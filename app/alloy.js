@@ -1,1 +1,2 @@
-var Alloy = require("/alloy");
+
+Alloy.Globals.Map = require("ti.map");

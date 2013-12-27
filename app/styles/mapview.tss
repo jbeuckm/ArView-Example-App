@@ -1,31 +1,34 @@
-'#mapview': {
+"#closeButton": {
+	top: 20
+}
+
+"#mapview": {
 	animate: true,
 	regionFit: true,
-	userLocation: true,
-	mapType: Ti.Map.STANDARD_TYPE
+	userLocation: true
 }
 
 
 "#overlay":{
 	top : 0,
-	height : '44dp',
-	backgroundColor : 'black',
-	color : 'white',
+	height : "44dp",
+	backgroundColor : "black",
+	color : "white",
 	width : Ti.UI.FILL,
 	text : "parmaVision",
 	opacity : 0.3,
-	textAlign : 'center',
+	textAlign : "center",
 	font : {
-		fontWeight : 'bold',
-		fontSize : '18dp'
+		fontWeight : "bold",
+		fontSize : "18dp"
 	}
 }
 
 
 "#arViewButton": {
-	title : 'AR',
-	width : '60dp',
-	height : '40dp',
-	right : '5dp',
-	top : '2dp'
+	title : "AR",
+	width : "60dp",
+	height : "40dp",
+	right : "5dp",
+	top : "2dp"
 }
